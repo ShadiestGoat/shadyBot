@@ -33,14 +33,22 @@ func init() {
 			return
 		}
 
+		donationURL := c.FundURL(fund) + "?id=" + discutils.IAuthor(i.Interaction).ID
+
 		btn := discordgo.Button{
 			Label: "Donate Now",
 			Style: discordgo.LinkButton,
-			URL:   c.FundURL(fund) + "?id=" + discutils.IAuthor(i.Interaction).ID,
+			URL:   donationURL,
 		}
 
+		emb := discutils.BaseEmbed
+
+		emb.Title = "Donate now!"
+		emb.Description = "[You should donate right now](" + donationURL + ")"
+		emb.URL = donationURL
+
 		discutils.IResp(s, i.Interaction, &discutils.IRespOpts{
-			Embed: &discordgo.MessageEmbed{},
+			Embed: &emb,
 			Comps: []discordgo.MessageComponent{
 				btn,
 				btn,
