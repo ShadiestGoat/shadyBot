@@ -45,7 +45,7 @@ func Amount(userID string) (total, tmp int) {
 }
 
 func Severity(userID string) (total, tmp int) {
-	return fetch(`SUM(severity)`, userID)
+	return fetch(`COALESCE(SUM(severity), 0)`, userID)
 }
 
 type Warning struct {
