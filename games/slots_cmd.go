@@ -94,7 +94,7 @@ func cmdSlots() {
 			discutils.IResp(s, i.Interaction, &discutils.IRespOpts{
 				Embed:   embedSlots(lines, cols, shiftsLeft),
 				Content: &content,
-			}, discutils.I_DEFERRED)
+			}, discutils.I_EDIT)
 
 			time.Sleep(120 * time.Millisecond)
 		}
@@ -114,7 +114,7 @@ func cmdSlots() {
 		discutils.IResp(s, i.Interaction, &discutils.IRespOpts{
 			Embed:   emb,
 			Content: &content,
-		}, discutils.I_DEFERRED)
+		}, discutils.I_EDIT)
 	})
 }
 

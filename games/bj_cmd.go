@@ -104,12 +104,12 @@ func cmdBlackjack() {
 				time.Sleep(1500 * time.Millisecond)
 				btn := game.buttons()
 
-				s.InteractionResponseEdit(i.Interaction, &discordgo.WebhookEdit{
-					Embeds: &[]*discordgo.MessageEmbed{
-						game.embedGame(),
-					},
-					Components: &btn,
-				})
+				// IErrorBtn responded
+				discutils.IResp(s, i.Interaction, &discutils.IRespOpts{
+					Embed: game.embedGame(),
+					Comps: btn,
+				}, discutils.I_EDIT)
+
 				return
 			}
 
@@ -130,7 +130,8 @@ func cmdBlackjack() {
 		won := false
 		gotDraw := false
 
-		// FinishGame(game.UserID, game.TrueBet(), false, GT_BJ)
+		discutils.IDefer(s, i.Interaction, discutils.I_NONE)
+
 		if userBusted {
 			won = false
 			msgToSend = "You busted"
@@ -140,7 +141,7 @@ func cmdBlackjack() {
 		} else if !game.UserTurn {
 			// Dealer's turn
 
-			discutils.IResp(s, i.Interaction, game.respOpts(), discutils.I_UPDATE)
+			discutils.IResp(s, i.Interaction, game.respOpts(), discutils.I_EDIT)
 
 			var state = game.dealerLoopState()
 
@@ -148,7 +149,7 @@ func cmdBlackjack() {
 				time.Sleep(800 * time.Millisecond)
 				game.DealerHand = append(game.DealerHand, game.NewCard())
 
-				discutils.IResp(s, i.Interaction, game.respOpts(), discutils.I_UPDATE)
+				discutils.IResp(s, i.Interaction, game.respOpts(), discutils.I_EDIT)
 				state = game.dealerLoopState()
 			}
 
@@ -170,12 +171,12 @@ func cmdBlackjack() {
 			emb.Title = TITLE_BJ
 			emb.Description = "The dealer's hand is **equal** to yours! This means you **neither won nor lost** any xp." + game.handString()
 
-			discutils.IEmbed(s, i.Interaction, &emb, discutils.I_DEFERRED)
+			discutils.IEmbed(s, i.Interaction, &emb, discutils.I_EDIT)
 		} else if msgToSend != "" {
 			FinishGame(game.UserID, game.TrueBet(), won, GT_BJ)
-			discutils.IEmbed(s, i.Interaction, game.embedBase(msgToSend, won), discutils.I_DEFERRED)
+			discutils.IEmbed(s, i.Interaction, game.embedBase(msgToSend, won), discutils.I_EDIT)
 		} else {
-			discutils.IResp(s, i.Interaction, game.respOpts(), discutils.I_UPDATE)
+			discutils.IResp(s, i.Interaction, game.respOpts(), discutils.I_EDIT)
 		}
 	})
 }

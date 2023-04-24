@@ -190,8 +190,10 @@ type InteractionOpt int
 const (
 	I_NONE      InteractionOpt = 0
 	I_EPHEMERAL InteractionOpt = 1 << iota
+	// For first-time responses, usually for buttons
 	I_UPDATE
-	I_DEFERRED
+	// For editing stuff after a response (eg. for a defer)
+	I_EDIT
 )
 
 func IDefer(s *discordgo.Session, i *discordgo.Interaction, opts InteractionOpt) {
@@ -220,7 +222,7 @@ func IEmbed(s *discordgo.Session, i *discordgo.Interaction, emb *discordgo.Messa
 	var flags discordgo.MessageFlags
 	t := discordgo.InteractionResponseChannelMessageWithSource
 
-	if utils.BitMask(opts, I_DEFERRED) {
+	if utils.BitMask(opts, I_EDIT) {
 		_, err := s.InteractionResponseEdit(i, &discordgo.WebhookEdit{
 			Embeds: &[]*discordgo.MessageEmbed{
 				emb,
@@ -292,7 +294,7 @@ func IResp(s *discordgo.Session, i *discordgo.Interaction, conf *IRespOpts, opts
 		components = nil
 	}
 
-	if utils.BitMask(opts, I_DEFERRED) {
+	if utils.BitMask(opts, I_EDIT) {
 		var compsToSend *[]discordgo.MessageComponent
 
 		if components != nil {

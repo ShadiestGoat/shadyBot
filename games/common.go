@@ -130,7 +130,7 @@ func (g *InactivityDB) Loop(s *discordgo.Session, stop chan bool) {
 							go FinishGame(user, bet, false, GT_BJ)
 						}
 
-						discutils.IError(s, t.LastInteraction, fmt.Sprintf("The game timed out! You lost your bet, %d!", bet), discutils.I_DEFERRED)
+						discutils.IError(s, t.LastInteraction, fmt.Sprintf("The game timed out! You lost your bet, %d!", bet), discutils.I_EDIT)
 					}
 				}
 			}()
