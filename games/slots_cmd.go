@@ -2,6 +2,7 @@ package games
 
 import (
 	"fmt"
+	"math"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -13,6 +14,8 @@ import (
 )
 
 var slotHorizontalLineReq = [3]int{2, 1, 3}
+
+const LINE_COST = 50
 
 func cmdSlots() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
@@ -58,16 +61,16 @@ func cmdSlots() {
 		if InActivityErrorCheck(s, i.Interaction) {
 			return
 		}
-		if XPErrorCheck(s, i.Interaction, lines*50) {
+		if XPErrorCheck(s, i.Interaction, lines*LINE_COST) {
 			return
 		}
 		ActivityStore.Add(i.Interaction, GT_SLOTS)
 
 		cols := [3][]rune{slots(), slots(), slots()}
 		shiftsLeft := [3]int{
-			utils.RandInt(6, 20),
-			utils.RandInt(6, 20),
-			utils.RandInt(6, 20),
+			utils.RandInt(9, 23),
+			utils.RandInt(9, 25),
+			utils.RandInt(10, 27),
 		}
 
 		maxV := 0
@@ -95,6 +98,7 @@ func cmdSlots() {
 					cols[k] = utils.RingCircleMove(cols[k])
 				}
 			}
+
 			discutils.IResp(s, i.Interaction, &discutils.IRespOpts{
 				Embed:   embedSlots(lines, cols, shiftsLeft),
 				Content: &content,
@@ -113,7 +117,8 @@ func cmdSlots() {
 			}
 		}
 
-		FinishGame(userID, total, total > 0, GT_SLOTS)
+		
+		FinishGame(userID, int(math.Abs(float64(total) - float64(lines) * LINE_COST)), total > 0, GT_SLOTS)
 
 		discutils.IResp(s, i.Interaction, &discutils.IRespOpts{
 			Embed:   emb,
@@ -228,7 +233,7 @@ func embedSlotsWithRewards(lines int, cols [3][]rune) (*discordgo.MessageEmbed, 
 		rewardStr += "\n"
 	}
 
-	rewardStr += "████████████\n**Total: " + fmt.Sprint(total) + "**"
+	rewardStr += "████████████\n**Total: " + fmt.Sprint(total - lines * LINE_COST) + "**"
 
 	emb.Fields = append(emb.Fields, &discordgo.MessageEmbedField{
 		Name:   "Rewards",
