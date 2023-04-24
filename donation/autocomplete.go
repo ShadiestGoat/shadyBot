@@ -9,7 +9,7 @@ import (
 
 func autocompleteFunds(s *discordgo.Session, i *discordgo.InteractionCreate, d *discordgo.ApplicationCommandInteractionData, data map[string]*discordgo.ApplicationCommandInteractionDataOption) {
 	q := data["fund"].StringValue()
-	isComplete := true
+	isComplete := false
 	funds, err := c.Funds("", "", false, &isComplete)
 	if log.ErrorIfErr(err, "query for funds") {
 		return
