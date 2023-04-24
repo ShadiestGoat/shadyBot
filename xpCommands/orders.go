@@ -152,7 +152,7 @@ func FetchRows(order string, start, stop int) ([]*Rank, error) {
 
 	res, err := db.Query(
 		`SELECT id, xp, lvl, vc_time, msg_num, last_update FROM xp ORDER BY `+strings.Join(cols, " DESC, ")+
-			` DESC,last_update ASC LIMIT $1 OFFSET $2`, stop-start, start,
+			` DESC, last_update ASC LIMIT $1 OFFSET $2`, stop-start, start,
 	)
 
 	if err != nil {

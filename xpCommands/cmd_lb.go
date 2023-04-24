@@ -32,7 +32,7 @@ func cmdLeaderboard() {
 		}
 
 		order := ORDER_XP
-		if opt := data["order"]; opt != nil {
+		if opt := data["type"]; opt != nil {
 			order = opt.StringValue()
 		}
 
