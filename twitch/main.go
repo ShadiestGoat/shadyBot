@@ -65,6 +65,8 @@ func init() {
 					time.Sleep(100 * time.Millisecond)
 				}
 
+				log.Debug("%#v", auth)
+
 				helixClient, err = helix.NewClient(&helix.Options{
 					ClientID:       config.Twitch.ClientID,
 					ClientSecret:   config.Twitch.ClientSecret,
