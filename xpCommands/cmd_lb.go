@@ -158,11 +158,12 @@ func leaderboardEmbed(order string, page int) (*discordgo.MessageEmbed, error) {
 			f[1].Value = vc + "\n" + msgs
 		case ORDER_XP:
 			rank = RankXP(row.Level, row.XP, row.LastActive)
-			lvlReq := xp.LevelUpRequirement(row.Level)
-
+			
 			f[1].Value = msgs + "\n" + vc
-			f[2].Value = utils.TextProgressBar(float64(lvlReq), float64(row.XP), fmt.Sprint(row.Level), fmt.Sprint(row.Level+1), 12)
 		}
+		
+		lvlReq := xp.LevelUpRequirement(row.Level)
+		f[2].Value = utils.TextProgressBar(float64(lvlReq), float64(row.XP), fmt.Sprint(row.Level), fmt.Sprint(row.Level+1), 12)
 
 		f[0].Value = fmt.Sprintf("%d. <@%s>", rank, row.UserID)
 
