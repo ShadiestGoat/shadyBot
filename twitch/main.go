@@ -112,6 +112,8 @@ func init() {
 				log.Success("twitch irc bot setup complete! Adding notifications...")
 
 				if config.Channels.Twitch != "" && config.General.Domain != "localhost" {
+					helixClient.SetUserAccessToken("")
+					
 					resp, err := helixClient.CreateEventSubSubscription(&helix.EventSubSubscription{
 						Type:      helix.EventSubTypeStreamOnline,
 						Version:   "1",
@@ -124,6 +126,8 @@ func init() {
 							Secret:   config.Twitch.CustomSecret,
 						},
 					})
+
+					helixClient.SetUserAccessToken(userToken.AccessToken)
 				
 					if err != nil || resp.ErrorMessage != "" && resp.ErrorMessage != "subscription already exists" {
 						msg := ""
