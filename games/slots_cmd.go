@@ -68,9 +68,9 @@ func cmdSlots() {
 
 		cols := [3][]rune{slots(), slots(), slots()}
 		shiftsLeft := [3]int{
-			utils.RandInt(9, 23),
-			utils.RandInt(9, 25),
-			utils.RandInt(10, 27),
+			utils.RandInt(5, 17),
+			utils.RandInt(5, 17),
+			utils.RandInt(5, 17),
 		}
 
 		maxV := 0
@@ -104,7 +104,7 @@ func cmdSlots() {
 				Content: &content,
 			}, discutils.I_EDIT)
 
-			time.Sleep(120 * time.Millisecond)
+			time.Sleep(130 * time.Millisecond)
 		}
 
 		emb, total := embedSlotsWithRewards(lines, cols)
