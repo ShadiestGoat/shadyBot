@@ -1,0 +1,6 @@
+resources/*
+secrets.conf
+config.conf
+shadyBot
+shadyBot.exe
+logs/*
