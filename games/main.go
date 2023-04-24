@@ -58,7 +58,7 @@ func cmdGambler() {
 
 		// game: [won, lost, gcd]
 		m := map[GameType][3]int{}
-		rows, err := db.Query(`SELECT game, won, lost WHERE id = $1`, userID)
+		rows, err := db.Query(`SELECT game, won, lost FROM gambling WHERE id = $1`, userID)
 		if err != nil {
 			discutils.IError(s, i.Interaction, "Couldn't fetch your stats!")
 			return
