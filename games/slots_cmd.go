@@ -23,7 +23,7 @@ func cmdSlots() {
 			{
 				Type:        discordgo.ApplicationCommandOptionInteger,
 				Name:        "paylines",
-				Description: "The number of paylines you are buying",
+				Description: "The number of paylines you are buying (Default = 1)",
 				Choices: []*discordgo.ApplicationCommandOptionChoice{
 					{
 						Name:  "Center Only (1)",
@@ -49,7 +49,11 @@ func cmdSlots() {
 			},
 		},
 	}, func(s *discordgo.Session, i *discordgo.InteractionCreate, d *discordgo.ApplicationCommandInteractionData, data map[string]*discordgo.ApplicationCommandInteractionDataOption) {
-		lines := int(data["paylines"].IntValue())
+		lines := 1
+
+		if data["paylines"] != nil {
+			lines = int(data["paylines"].IntValue())
+		}
 
 		if InActivityErrorCheck(s, i.Interaction) {
 			return
