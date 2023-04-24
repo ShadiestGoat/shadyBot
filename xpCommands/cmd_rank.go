@@ -167,7 +167,7 @@ func cmdRank() {
 				Value: "Rank **#" + fmt.Sprint(rank.RankXP) + "**\n" + utils.TextProgressBar(
 					float64(reqLvl), float64(rank.XP),
 					fmt.Sprint(rank.Level), fmt.Sprint(rank.Level+1),
-					40,
+					36,
 				),
 				Inline: false,
 			},

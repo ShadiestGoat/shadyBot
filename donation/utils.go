@@ -27,7 +27,7 @@ func embedFund(f *donations.Fund) *discordgo.MessageEmbed {
 
 		emb.Fields = append(emb.Fields, &discordgo.MessageEmbedField{
 			Name:   "Goal",
-			Value:  utils.TextProgressBar(f.Goal, *f.Amount, "0", fmt.Sprint(f.Goal), 40),
+			Value:  utils.TextProgressBar(f.Goal, *f.Amount, "0", fmt.Sprint(f.Goal), 36),
 			Inline: false,
 		})
 	}
