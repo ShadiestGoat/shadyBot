@@ -323,5 +323,5 @@ func IResp(s *discordgo.Session, i *discordgo.Interaction, conf *IRespOpts, opts
 		},
 	})
 
-	log.ErrorIfErr(err, "creating interaction w/ components")
+	log.ErrorIfErr(err, "during IResp")
 }
