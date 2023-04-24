@@ -16,7 +16,8 @@ import (
 )
 
 var (
-	auth         *OAuth2
+	userToken    *OAuth2
+	appToken *OAuth2
 	helixClient  *helix.Client
 	ircClient    *twitch.Client
 	pubSubClient *twitchpubsub.Client
@@ -61,20 +62,31 @@ func init() {
 			initHTTP(c.Discord)
 
 			go func() {
-				for auth == nil {
+				for userToken == nil {
 					time.Sleep(100 * time.Millisecond)
 				}
-
-				log.Debug("%#v", auth)
 
 				helixClient, err = helix.NewClient(&helix.Options{
 					ClientID:       config.Twitch.ClientID,
 					ClientSecret:   config.Twitch.ClientSecret,
-					AppAccessToken: auth.AccessToken,
+					UserAccessToken: userToken.AccessToken,
 					RedirectURI:    BASE_URL,
-					APIBaseURL:     "",
 					ExtensionOpts:  helix.ExtensionOptions{},
 				})
+
+				resp, err := helixClient.RequestAppAccessToken(scopes)
+				log.FatalIfErr(err, "fetching app access token")
+				if resp.ErrorMessage != "" {
+					log.Fatal("While fetching app access token, resp: " + resp.ErrorMessage)
+				}
+
+				helixClient.SetAppAccessToken(resp.Data.AccessToken)
+
+				appToken = &OAuth2{
+					AccessToken:  resp.Data.AccessToken,
+					RefreshToken: resp.Data.RefreshToken,
+					ExpiresIn:    resp.Data.ExpiresIn,
+				}
 
 				OWN_ID = userID(config.Twitch.ChannelName)
 

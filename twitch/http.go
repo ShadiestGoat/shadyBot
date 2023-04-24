@@ -20,6 +20,14 @@ import (
 	"github.com/shadiestgoat/shadyBot/snownode"
 )
 
+var scopes = []string{
+	"chat:edit", "chat:read", "bits:read",
+	"channel:manage:redemptions", "channel:read:redemptions",
+	"moderator:manage:shoutouts", "moderator:read:shoutouts",
+	"user:manage:whispers", "whispers:read", "whispers:edit",
+	"moderator:read:followers",
+}
+
 type OAuth2 struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
@@ -27,19 +35,21 @@ type OAuth2 struct {
 }
 
 func refreshToken() {
-	if auth == nil || helixClient == nil {
+	if userToken == nil || helixClient == nil {
 		return
 	}
 
-	resp, err := helixClient.RefreshUserAccessToken(auth.RefreshToken)
+	resp, err := helixClient.RefreshUserAccessToken(userToken.RefreshToken)
 	if log.ErrorIfErr(err, "refreshing twitch token") {
 		return
 	}
 
-	auth = &OAuth2{
+	userToken = &OAuth2{
 		AccessToken:  resp.Data.AccessToken,
 		RefreshToken: resp.Data.RefreshToken,
 	}
+
+	helixClient.SetUserAccessToken(userToken.AccessToken)
 
 	go func() {
 		time.Sleep(time.Duration(resp.Data.ExpiresIn-5) * time.Second)
@@ -60,18 +70,12 @@ func initHTTP(s *discordgo.Session) {
 
 	log.PrintWarn(
 		"Please login for twitch:\nhttps://id.twitch.tv/oauth2/authorize?response_type=code&client_id=%v&redirect_uri=%v&scope=%s&state=%v",
-		config.Twitch.ClientID, BASE_URL, url.QueryEscape(strings.Join([]string{
-			"chat:edit", "chat:read", "bits:read",
-			"channel:manage:redemptions", "channel:read:redemptions",
-			"moderator:manage:shoutouts", "moderator:read:shoutouts",
-			"user:manage:whispers", "whispers:read", "whispers:edit",
-			"moderator:read:followers",
-		}, " ")), state,
+		config.Twitch.ClientID, BASE_URL, url.QueryEscape(strings.Join(scopes, " ")), state,
 	)
 
 	r.Get(`/`, func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
-		if q.Get("state") != state || q.Get("code") == "" || auth != nil {
+		if q.Get("state") != state || q.Get("code") == "" || userToken != nil {
 			w.WriteHeader(400)
 			w.Write([]byte(`{"error": "You done fucked up man"}`))
 			return
@@ -107,7 +111,7 @@ func initHTTP(s *discordgo.Session) {
 			return
 		}
 
-		auth = authTMP
+		userToken = authTMP
 
 		go func() {
 			time.Sleep(time.Second * time.Duration(authTMP.ExpiresIn-5))

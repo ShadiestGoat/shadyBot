@@ -34,7 +34,7 @@ func acceptPoints(d *twitchpubsub.PointsEvent) {
 
 func pubSub() {
 	pubSubClient = twitchpubsub.NewClient(twitchpubsub.DefaultHost)
-	pubSubClient.Listen("channel-points-channel-v1."+OWN_ID, auth.AccessToken)
+	pubSubClient.Listen("channel-points-channel-v1."+OWN_ID, userToken.AccessToken)
 	pubSubClient.OnPointsEvent(func(_ string, data *twitchpubsub.PointsEvent) {
 
 		switch data.Reward.Title {
