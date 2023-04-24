@@ -12,7 +12,7 @@ import (
 func init() {
 	initializer.RegisterPriority(initializer.MOD_CONFIG, func(c *initializer.InitContext) {
 		load()
-		
+
 		_, err := os.Stat("resources")
 		if err != nil {
 			os.Mkdir("resources", 0755)
@@ -47,7 +47,7 @@ func init() {
 			log.NewLoggerPrint(),
 			log.NewLoggerFile("logs/log"),
 		}
-		
+
 		if debugV.WebHook != "" {
 			if debugV.Mention != "" {
 				debugV.Mention += ", "

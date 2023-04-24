@@ -12,10 +12,10 @@ import (
 
 func cmdDonor() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "donor",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "donor",
 		DefaultMemberPermissions: discord.Perms(),
-		Description:       "Fetch information about a donor",
+		Description:              "Fetch information about a donor",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:        discordgo.ApplicationCommandOptionUser,

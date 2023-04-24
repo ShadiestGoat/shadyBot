@@ -15,10 +15,10 @@ import (
 
 func cmd() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "poll",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "poll",
 		DefaultMemberPermissions: discord.Perms(discord.PERM_ADMINISTRATOR),
-		Description:       "Create a poll",
+		Description:              "Create a poll",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:        discordgo.ApplicationCommandOptionString,
@@ -75,8 +75,8 @@ func cmd() {
 	})
 
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.MessageApplicationCommand,
-		Name:              "End Poll",
+		Type:                     discordgo.MessageApplicationCommand,
+		Name:                     "End Poll",
 		DefaultMemberPermissions: discord.Perms(discord.PERM_ADMINISTRATOR),
 	}, func(s *discordgo.Session, i *discordgo.InteractionCreate, d *discordgo.ApplicationCommandInteractionData, data map[string]*discordgo.ApplicationCommandInteractionDataOption) {
 		ogMsg := d.Resolved.Messages[d.TargetID]

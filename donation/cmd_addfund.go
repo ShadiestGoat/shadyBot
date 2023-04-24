@@ -8,10 +8,10 @@ import (
 
 func cmdAddFund() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
+		Type:                     discordgo.ChatApplicationCommand,
 		DefaultMemberPermissions: discord.Perms(discord.PERM_ADMINISTRATOR),
-		Name:              "addfund",
-		Description:       "Create a new fund on the donation website",
+		Name:                     "addfund",
+		Description:              "Create a new fund on the donation website",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:        discordgo.ApplicationCommandOptionString,

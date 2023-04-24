@@ -15,10 +15,10 @@ import (
 
 func cmdEmbed() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "embed",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "embed",
 		DefaultMemberPermissions: discord.Perms(discord.PERM_ADMINISTRATOR),
-		Description:       "Create an embed from options",
+		Description:              "Create an embed from options",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:        discordgo.ApplicationCommandOptionChannel,

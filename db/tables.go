@@ -42,11 +42,12 @@ BEFORE UPDATE
 		EXECUTE PROCEDURE xp_trig_func()
 `
 
-// CREATE TRIGGER trigger_name 
-//    {BEFORE | AFTER} { event }
-//    ON table_name
-//    [FOR [EACH] { ROW | STATEMENT }]
-//        EXECUTE PROCEDURE trigger_function
+// CREATE TRIGGER trigger_name
+//
+//	{BEFORE | AFTER} { event }
+//	ON table_name
+//	[FOR [EACH] { ROW | STATEMENT }]
+//	    EXECUTE PROCEDURE trigger_function
 const sql_SETUP_WARN = `CREATE TABLE IF NOT EXISTS warnings (
 	id TEXT PRIMARY KEY,
 	warned_user TEXT NOT NULL,

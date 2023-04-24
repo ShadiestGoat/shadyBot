@@ -47,10 +47,10 @@ func Explain(pr pronoundb.Pronoun) string {
 
 func init() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "pronouns",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "pronouns",
 		DefaultMemberPermissions: discord.Perms(),
-		Description:       "Get information about a user's pronouns",
+		Description:              "Get information about a user's pronouns",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:        discordgo.ApplicationCommandOptionUser,

@@ -13,10 +13,10 @@ func cmdEditFund() {
 	minGoal := 10.0
 
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "editfund",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "editfund",
 		DefaultMemberPermissions: discord.Perms(discord.PERM_ADMINISTRATOR),
-		Description:       "Edit a fund by id!",
+		Description:              "Edit a fund by id!",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:         discordgo.ApplicationCommandOptionString,

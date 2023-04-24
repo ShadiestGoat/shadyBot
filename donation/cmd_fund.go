@@ -9,10 +9,10 @@ import (
 
 func cmdFund() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "fund",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "fund",
 		DefaultMemberPermissions: discord.Perms(),
-		Description:       "Fetch information about a fund",
+		Description:              "Fetch information about a fund",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:         discordgo.ApplicationCommandOptionString,

@@ -30,10 +30,10 @@ func init() {
 
 func cmdGambler() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "gambler",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "gambler",
 		DefaultMemberPermissions: discord.Perms(),
-		Description:       "Fetch information about a gambler",
+		Description:              "Fetch information about a gambler",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:        discordgo.ApplicationCommandOptionUser,

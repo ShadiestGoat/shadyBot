@@ -13,9 +13,9 @@ import (
 
 func register() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "role",
-		Description:       "Create a role assignment button",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "role",
+		Description:              "Create a role assignment button",
 		DefaultMemberPermissions: discord.Perms(discord.PERM_ADMINISTRATOR),
 		Options: []*discordgo.ApplicationCommandOption{
 			{

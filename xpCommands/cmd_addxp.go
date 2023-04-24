@@ -17,10 +17,10 @@ import (
 // - type: XP | Level
 func cmdAddXP() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "addxp",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "addxp",
 		DefaultMemberPermissions: discord.Perms(discord.PERM_ADMINISTRATOR),
-		Description:       "Add XP to user",
+		Description:              "Add XP to user",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:        discordgo.ApplicationCommandOptionUser,

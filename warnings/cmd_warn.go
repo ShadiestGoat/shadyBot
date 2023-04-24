@@ -17,10 +17,10 @@ func cmdWarn() {
 	minSeverity := 1.0
 
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "warn",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "warn",
 		DefaultMemberPermissions: discord.Perms(discord.PERM_ADMINISTRATOR),
-		Description:       "Warn a user",
+		Description:              "Warn a user",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:        discordgo.ApplicationCommandOptionUser,

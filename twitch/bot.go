@@ -116,9 +116,9 @@ var baseCommands = map[string]*TwitchCommand{
 func twitchBot() {
 	log.Debug("Connecting twitch irc oauth...")
 
-	ircClient = twitch.NewClient(config.Twitch.AppName, "oauth:" + auth.AccessToken)
+	ircClient = twitch.NewClient(config.Twitch.AppName, "oauth:"+auth.AccessToken)
 	log.Debug("Post irc client")
-	
+
 	ircClient.Join(config.Twitch.ChannelName)
 
 	ircClient.OnConnect(func() {

@@ -7,12 +7,12 @@ var (
 	}
 	Donations = donations{
 		Persistent: new(DonationRoles),
-		Monthly: new(DonationRoles),
-		Location: "donate.shadygoat.eu",
+		Monthly:    new(DonationRoles),
+		Location:   "donate.shadygoat.eu",
 	}
-	Warnings  = warnings{
+	Warnings = warnings{
 		AutoBanSeverity: 5,
-		Punishments: new(WarningLevels),
+		Punishments:     new(WarningLevels),
 	}
 	Channels = channels{}
 	Discord  = discord{}
@@ -45,17 +45,17 @@ type channels struct {
 
 type warnings struct {
 	Punishments     *WarningLevels `conf:"punishments,the only punishment will be the auto ban after severity"`
-	AutoBanSeverity int           `conf:"auto_ban_severity"`
+	AutoBanSeverity int            `conf:"auto_ban_severity"`
 }
 
 type donations struct {
-	Donations  string        `conf:"channel_donations,new donations will not be announced"`
-	Funds      string        `conf:"channel_funds,new funds will not be announced"`
-	Info       string        `conf:"channel_info,donation tier info will not posted"`
+	Donations  string         `conf:"channel_donations,new donations will not be announced"`
+	Funds      string         `conf:"channel_funds,new funds will not be announced"`
+	Info       string         `conf:"channel_info,donation tier info will not posted"`
 	Persistent *DonationRoles `conf:"roles_persistent,there are no permanent roles for donors"`
 	Monthly    *DonationRoles `conf:"roles_monthly,there are no special roles for this month's donors"`
-	Token      string        `conf:"token,required"`
-	Location   string        `conf:"location"`
+	Token      string         `conf:"token,required"`
+	Location   string         `conf:"location"`
 }
 
 type twitch struct {

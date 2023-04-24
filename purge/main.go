@@ -12,10 +12,10 @@ import (
 
 func init() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "purge",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "purge",
 		DefaultMemberPermissions: discord.Perms(discord.PERM_ADMINISTRATOR),
-		Description:       "Fully purge a channel (WARNING: THIS RE-CREATES THE CHANNEL)",
+		Description:              "Fully purge a channel (WARNING: THIS RE-CREATES THE CHANNEL)",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:        discordgo.ApplicationCommandOptionChannel,

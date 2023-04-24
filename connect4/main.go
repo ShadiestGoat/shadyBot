@@ -14,10 +14,10 @@ const (
 
 func init() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "connect-4",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "connect-4",
 		DefaultMemberPermissions: discord.Perms(),
-		Description:       "Play connect 4 with the other player",
+		Description:              "Play connect 4 with the other player",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:        discordgo.ApplicationCommandOptionUser,

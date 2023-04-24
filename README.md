@@ -73,4 +73,3 @@ Sometimes, I shoutout a user very often. For this, I have a custom shoutout for 
 2. Download & Compile this code with `go build` (don't worry - build go apps is really fast & easy, this should take you less than a minute!)
 3. Run the binary output
 4. Profit
-

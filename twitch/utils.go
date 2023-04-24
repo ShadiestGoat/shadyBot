@@ -42,7 +42,7 @@ func createSubscription(t string, cond helix.EventSubCondition, cbPath string) {
 	if config.General.Domain == "localhost" {
 		return
 	}
-	
+
 	resp, err := helixClient.CreateEventSubSubscription(&helix.EventSubSubscription{
 		Type:      t,
 		Version:   "1",

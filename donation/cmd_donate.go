@@ -9,10 +9,10 @@ import (
 
 func init() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "donate",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "donate",
 		DefaultMemberPermissions: discord.Perms(),
-		Description:       "Get auto logged in link for the donation website",
+		Description:              "Get auto logged in link for the donation website",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:         discordgo.ApplicationCommandOptionString,

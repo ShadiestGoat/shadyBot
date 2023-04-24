@@ -61,8 +61,8 @@ func initHTTP(s *discordgo.Session) {
 	log.PrintWarn(
 		"Please login for twitch:\nhttps://id.twitch.tv/oauth2/authorize?response_type=code&client_id=%v&redirect_uri=%v&scope=%s&state=%v",
 		config.Twitch.ClientID, BASE_URL, url.QueryEscape(strings.Join([]string{
-			"chat:edit", "chat:read", "bits:read", 
-			"channel:manage:redemptions", "channel:read:redemptions", 
+			"chat:edit", "chat:read", "bits:read",
+			"channel:manage:redemptions", "channel:read:redemptions",
 			"moderator:manage:shoutouts", "moderator:read:shoutouts",
 			"user:manage:whispers", "whispers:read", "whispers:edit",
 			"moderator:read:followers",

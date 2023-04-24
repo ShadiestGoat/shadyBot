@@ -34,8 +34,8 @@ const (
 )
 
 type InitContext struct {
-	Discord       *discordgo.Session
-	Donation      *donations.Client
+	Discord  *discordgo.Session
+	Donation *donations.Client
 }
 
 var ctx = &InitContext{}

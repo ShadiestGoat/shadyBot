@@ -23,7 +23,7 @@ func RegisterCommand(cmd *discordgo.ApplicationCommand, handler HandlerCommand) 
 	commandHandlers[cmd.Name] = handler
 }
 
-type Permission int64 
+type Permission int64
 
 const (
 	PERM_CREATE_INSTANT_INVITE Permission = 1 << iota

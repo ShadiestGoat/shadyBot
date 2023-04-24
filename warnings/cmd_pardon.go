@@ -14,10 +14,10 @@ import (
 
 func cmdPardon() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
-		Type:              discordgo.ChatApplicationCommand,
-		Name:              "pardon",
+		Type:                     discordgo.ChatApplicationCommand,
+		Name:                     "pardon",
 		DefaultMemberPermissions: discord.Perms(discord.PERM_ADMINISTRATOR),
-		Description:       "Pardon a user's warning",
+		Description:              "Pardon a user's warning",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Type:        discordgo.ApplicationCommandOptionString,

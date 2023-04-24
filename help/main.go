@@ -195,10 +195,10 @@ func init() {
 		}
 
 		discord.RegisterCommand(&discordgo.ApplicationCommand{
-			Type:              discordgo.ChatApplicationCommand,
-			Name:              "help",
+			Type:                     discordgo.ChatApplicationCommand,
+			Name:                     "help",
 			DefaultMemberPermissions: discord.Perms(),
-			Description:       "Show the help menu",
+			Description:              "Show the help menu",
 			Options: []*discordgo.ApplicationCommandOption{
 				{
 					Type:        discordgo.ApplicationCommandOptionString,
