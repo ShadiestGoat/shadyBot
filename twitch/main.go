@@ -73,6 +73,7 @@ func init() {
 					RedirectURI:    BASE_URL,
 					ExtensionOpts:  helix.ExtensionOptions{},
 				})
+				log.FatalIfErr(err, "creating helix client")
 
 				resp, err := helixClient.RequestAppAccessToken(scopes)
 				log.FatalIfErr(err, "fetching app access token")
@@ -110,10 +111,29 @@ func init() {
 
 				log.Success("twitch irc bot setup complete! Adding notifications...")
 
-				if config.Channels.Twitch != "" {
-					createSubscription(helix.EventSubTypeStreamOnline, helix.EventSubCondition{
-						BroadcasterUserID: OWN_ID,
-					}, "/live")
+				if config.Channels.Twitch != "" && config.General.Domain != "localhost" {
+					resp, err := helixClient.CreateEventSubSubscription(&helix.EventSubSubscription{
+						Type:      helix.EventSubTypeStreamOnline,
+						Version:   "1",
+						Condition: helix.EventSubCondition{
+							BroadcasterUserID: OWN_ID,
+						},
+						Transport: helix.EventSubTransport{
+							Method:   "webhook",
+							Callback: BASE_URL + "/live",
+							Secret:   config.Twitch.CustomSecret,
+						},
+					})
+				
+					if err != nil || resp.ErrorMessage != "" && resp.ErrorMessage != "subscription already exists" {
+						msg := ""
+						if resp != nil {
+							msg = resp.ErrorMessage
+						}
+						log.Fatal("While creating an event sub for type '%s': %v %s", helix.EventSubTypeStreamOnline, err, msg)
+					} else {
+						log.Success("Twitch Live notifications ready!")
+					}
 				}
 
 				go pubSub()
