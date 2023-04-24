@@ -281,19 +281,27 @@ func IResp(s *discordgo.Session, i *discordgo.Interaction, conf *IRespOpts, opts
 		_, ok1 := components[0].(discordgo.ActionsRow)
 		_, ok2 := components[0].(*discordgo.ActionsRow)
 
-		if !ok1 || !ok2 {
+		if !ok1 && !ok2 {
 			components = []discordgo.MessageComponent{
 				discordgo.ActionsRow{
 					Components: components,
 				},
 			}
 		}
+	} else {
+		components = nil
 	}
 
 	if utils.BitMask(opts, I_DEFERRED) {
+		var compsToSend *[]discordgo.MessageComponent
+
+		if components != nil {
+			compsToSend = &components
+		}
+
 		_, err := s.InteractionResponseEdit(i, &discordgo.WebhookEdit{
 			Embeds:     &embeds,
-			Components: &components,
+			Components: compsToSend,
 			Content:    conf.Content,
 		})
 
