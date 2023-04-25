@@ -50,6 +50,7 @@ func refreshToken() {
 	}
 
 	helixClient.SetUserAccessToken(userToken.AccessToken)
+	go twitchBot()
 }
 
 type eventSubNotification struct {

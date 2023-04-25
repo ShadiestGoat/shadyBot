@@ -66,10 +66,19 @@ var baseCommands = map[string]*TwitchCommand{
 				return "This person doesn't exist!"
 			}
 
-			helixClient.SendShoutout(&helix.SendShoutoutParams{
+			soResp, err := helixClient.SendShoutout(&helix.SendShoutoutParams{
 				FromBroadcasterID: OWN_ID,
 				ToBroadcasterID:   otherStreamer,
 			})
+
+			if err != nil || soResp.ErrorMessage != "" {
+				msg := ""
+				if soResp != nil {
+					msg = soResp.ErrorMessage
+				}
+
+				log.Error("Error when sending twitch so: %v %v", err, msg)
+			}
 
 			if sp, ok := config.Twitch.CustomSO[streamer]; ok {
 				return sp
@@ -114,10 +123,13 @@ var baseCommands = map[string]*TwitchCommand{
 }
 
 func twitchBot() {
-	log.Debug("Connecting twitch irc oauth...")
-
-	ircClient = twitch.NewClient(config.Twitch.AppName, "oauth:"+userToken.AccessToken)
-	log.Debug("Post irc client")
+	log.Debug("(Re)Connecting twitch irc oauth...")
+	if ircClient == nil {
+		ircClient = twitch.NewClient(config.Twitch.AppName, "")
+	} else {
+		ircClient.Disconnect()
+	}
+	ircClient.SetIRCToken("oauth:" + userToken.AccessToken)
 
 	ircClient.Join(config.Twitch.ChannelName)
 
@@ -157,5 +169,6 @@ func twitchBot() {
 		}
 	})
 
-	log.FatalIfErr(ircClient.Connect(), "running irc client")
+	log.ErrorIfErr(ircClient.Connect(), "running irc client")
+	go refreshToken()
 }

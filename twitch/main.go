@@ -17,7 +17,7 @@ import (
 
 var (
 	userToken    *OAuth2
-	appToken *OAuth2
+	appToken     *OAuth2
 	helixClient  *helix.Client
 	ircClient    *twitch.Client
 	pubSubClient *twitchpubsub.Client
