@@ -79,3 +79,4 @@ Sometimes, I shoutout a user very often. For this, I have a custom shoutout for 
 - [ ] A config option to disable modules
   - [ ] Refactor the way module choose to load/not to load
 - [ ] Refactor the way twitch is set up - there are 2 'modules' one pre-http and 1 post, and that should not be
+- [ ] Refactor the way twitch authentication is handled
