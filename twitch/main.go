@@ -82,8 +82,10 @@ func init() {
 			}
 
 			log.Debug("Starting to actually setup twitch...")
+			log.Debug("The user access token expires in %d seconds...", userToken.ExpiresIn)
+
 			var err error
-			
+
 			helixClient, err = helix.NewClient(&helix.Options{
 				ClientID:        config.Twitch.ClientID,
 				ClientSecret:    config.Twitch.ClientSecret,
@@ -147,7 +149,6 @@ func init() {
 				Transport: helix.EventSubTransport{
 					Method:   "webhook",
 					Callback: BASE_URL + "/live",
-					Secret:   config.Twitch.CustomSecret,
 				},
 			}
 	
@@ -155,10 +156,12 @@ func init() {
 	
 			log.Debug("New: %#v", newSub)
 			log.Debug("Resp: %#v", respSubs.Data)
-	
+
+			thereIsGood := false
+			
 			for _, d := range respSubs.Data.EventSubSubscriptions {
 				log.Debug("Old: %#v", d)
-	
+								
 				if d.Type != newSub.Type {
 					continue
 				}
@@ -174,6 +177,8 @@ func init() {
 					rmID = append(rmID, d.ID)
 					continue
 				}
+
+				thereIsGood = true
 			}
 	
 			if len(rmID) != 0 {
@@ -183,21 +188,26 @@ func init() {
 					log.Debug("Removing an old and outdates eventsub...")
 				}
 			}
-	
-			respNewSub, err := helixClient.CreateEventSubSubscription(newSub)
-			logError(err, &respNewSub.ResponseCommon, "creating evensub subscription")
+
+			if !thereIsGood {
+				newSub.Transport.Secret = config.Twitch.CustomSecret
+		
+				respNewSub, err := helixClient.CreateEventSubSubscription(newSub)
+				logError(err, &respNewSub.ResponseCommon, "creating evensub subscription")
+				if err != nil || respNewSub.ErrorMessage != "" && respNewSub.ErrorMessage != "subscription already exists" {
+					msg := ""
+					if respNewSub != nil {
+						msg = respNewSub.ErrorMessage
+					}
+					log.Fatal("While creating an event sub for type '%s': %v %s", helix.EventSubTypeStreamOnline, err, msg)
+				}
+			} else {
+				log.Debug("Using the old cb, since its still good")
+			}
 	
 			helixClient.SetUserAccessToken(userToken.AccessToken)
 	
-			if err != nil || respNewSub.ErrorMessage != "" && respNewSub.ErrorMessage != "subscription already exists" {
-				msg := ""
-				if respNewSub != nil {
-					msg = respNewSub.ErrorMessage
-				}
-				log.Fatal("While creating an event sub for type '%s': %v %s", helix.EventSubTypeStreamOnline, err, msg)
-			} else {
-				log.Success("Twitch Live notifications ready!")
-			}
+			log.Success("Twitch Live notifications ready!")
 		}()
 		
 	}, &initializer.ModuleInfo{
