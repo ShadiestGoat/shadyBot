@@ -122,11 +122,6 @@ func initHTTP(s *discordgo.Session) {
 
 		userToken = authTMP
 
-		go func() {
-			time.Sleep(time.Second * time.Duration(authTMP.ExpiresIn-5))
-			refreshToken()
-		}()
-
 		log.Success("Twitch Authed!")
 	})
 

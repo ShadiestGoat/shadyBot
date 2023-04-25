@@ -81,6 +81,8 @@ func init() {
 				time.Sleep(100 * time.Millisecond)
 			}
 
+			log.Debug("Starting to actually setup twitch...")
+
 			helixClient, err := helix.NewClient(&helix.Options{
 				ClientID:        config.Twitch.ClientID,
 				ClientSecret:    config.Twitch.ClientSecret,
@@ -103,6 +105,8 @@ func init() {
 				RefreshToken: resp.Data.RefreshToken,
 				ExpiresIn:    resp.Data.ExpiresIn,
 			}
+
+			log.Debug("Setup helix! Woohoo!!")
 
 			OWN_ID = userID(config.Twitch.ChannelName)
 
