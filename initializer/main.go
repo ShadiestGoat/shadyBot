@@ -29,6 +29,7 @@ const (
 	MOD_HELP_LOADER    initutils.Module = "HELP_LOADER"
 	MOD_HELP           initutils.Module = "HELP"
 	MOD_TWITCH         initutils.Module = "TWITCH"
+	MOD_TWITCH_LIVE    initutils.Module = "TWITCH_LIVE_NOTIFICATION"
 	MOD_HTTP           initutils.Module = "HTTP"
 	MOD_XP_CMD         initutils.Module = "XP_CMD"
 )

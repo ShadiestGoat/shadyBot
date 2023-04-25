@@ -68,6 +68,25 @@ type twitch struct {
 	CustomSO     map[string]string
 }
 
+func (t twitch) ShouldLoad() bool {
+	opts := []string{
+		General.Domain,
+		t.ClientID,
+		t.ClientSecret,
+		t.AppName,
+		t.ChannelName,
+		t.CustomSecret,
+	}
+	
+	for _, o := range opts {
+		if o == "" {
+			return false
+		}
+	}
+
+	return true
+}
+
 type debug struct {
 	Mention string `conf:"mention"`
 	WebHook string `conf:"webhook,warnings & errors will not be sent to anything on discord"`

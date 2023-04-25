@@ -109,92 +109,93 @@ func init() {
 
 				log.Success("Setup for helix done, running irc...")
 
-				go startIRC()
-
-				log.Success("twitch irc bot setup complete! Adding notifications...")
-
-				if config.Channels.Twitch != "" && config.General.Domain != "localhost" {
-					helixClient.SetUserAccessToken("")
-
-					respSubs, err := helixClient.GetEventSubSubscriptions(&helix.EventSubSubscriptionsParams{
-						Type: helix.EventSubTypeStreamOnline,
-					})
-
-					logError(err, &resp.ResponseCommon, "fetching eventsub subscriptions")
-
-					newSub := &helix.EventSubSubscription{
-						Type:    helix.EventSubTypeStreamOnline,
-						Version: "1",
-						Condition: helix.EventSubCondition{
-							BroadcasterUserID: OWN_ID,
-						},
-						Transport: helix.EventSubTransport{
-							Method:   "webhook",
-							Callback: BASE_URL + "/live",
-							Secret:   config.Twitch.CustomSecret,
-						},
-					}
-
-					rmID := ""
-
-					log.Debug("New: %#v", newSub)
-					log.Debug("Resp: %#v", respSubs.Data)
-					
-					for _, d := range respSubs.Data.EventSubSubscriptions {
-						log.Debug("Old: %#v", d)
-
-						if d.Type != newSub.Type {
-							continue
-						}
-						if d.Version != newSub.Version || !reflect.DeepEqual(d.Condition, newSub.Condition) {
-							rmID = d.ID
-							break
-						}
-						if !reflect.DeepEqual(d.Transport, newSub.Transport) {
-							rmID = d.ID
-							break
-						}
-					}
-
-					if rmID != "" {
-						resp, err := helixClient.RemoveEventSubSubscription(rmID)
-						logError(err, &resp.ResponseCommon, "removing eventsub subscription")
-						log.Debug("Removing an old and outdates eventsub...")
-					}
-
-					resp, err := helixClient.CreateEventSubSubscription(newSub)
-					logError(err, &resp.ResponseCommon, "creating evensub subscription")
-
-					helixClient.SetUserAccessToken(userToken.AccessToken)
-
-					if err != nil || resp.ErrorMessage != "" && resp.ErrorMessage != "subscription already exists" {
-						msg := ""
-						if resp != nil {
-							msg = resp.ErrorMessage
-						}
-						log.Fatal("While creating an event sub for type '%s': %v %s", helix.EventSubTypeStreamOnline, err, msg)
-					} else {
-						log.Success("Twitch Live notifications ready!")
-					}
-				}
-
+				go setupIRC()
 				go setupPubSub()
 			}()
 		},
 		&initializer.ModuleInfo{
-			ConfigOpts: []*string{
-				&config.General.Domain,
-				&config.Twitch.ClientID,
-				&config.Twitch.ClientSecret,
-				&config.Twitch.AppName,
-				&config.Twitch.ChannelName,
-				&config.Twitch.CustomSecret,
+			ShouldLoad: func(c *initializer.InitContext) bool {
+				return config.Twitch.ShouldLoad()
 			},
 			PreHooks: []initutils.Module{
 				initializer.MOD_HTTP,
 			},
 		},
-
 		initializer.MOD_DISCORD,
 	)
+
+	initializer.Register(initializer.MOD_TWITCH_LIVE, func(c *initializer.InitContext) {
+		helixClient.SetUserAccessToken("")
+
+		respSubs, err := helixClient.GetEventSubSubscriptions(&helix.EventSubSubscriptionsParams{
+			Type: helix.EventSubTypeStreamOnline,
+		})
+
+		logError(err, &respSubs.ResponseCommon, "fetching eventsub subscriptions")
+
+		newSub := &helix.EventSubSubscription{
+			Type:    helix.EventSubTypeStreamOnline,
+			Version: "1",
+			Condition: helix.EventSubCondition{
+				BroadcasterUserID: OWN_ID,
+			},
+			Transport: helix.EventSubTransport{
+				Method:   "webhook",
+				Callback: BASE_URL + "/live",
+				Secret:   config.Twitch.CustomSecret,
+			},
+		}
+
+		rmID := []string{}
+
+		log.Debug("New: %#v", newSub)
+		log.Debug("Resp: %#v", respSubs.Data)
+
+		for _, d := range respSubs.Data.EventSubSubscriptions {
+			log.Debug("Old: %#v", d)
+
+			if d.Type != newSub.Type {
+				continue
+			}
+			if d.Version != newSub.Version || !reflect.DeepEqual(d.Condition, newSub.Condition) {
+				rmID = append(rmID, d.ID)
+				continue
+			}
+			if !reflect.DeepEqual(d.Transport, newSub.Transport) {
+				rmID = append(rmID, d.ID)
+				continue
+			}
+			if d.Status == "webhook_callback_verification_failed" {
+				rmID = append(rmID, d.ID)
+				continue
+			}
+		}
+
+		if len(rmID) != 0 {
+			for _, id := range rmID {
+				resp, err := helixClient.RemoveEventSubSubscription(id)
+				logError(err, &resp.ResponseCommon, "removing eventsub subscription")
+				log.Debug("Removing an old and outdates eventsub...")
+			}
+		}
+
+		resp, err := helixClient.CreateEventSubSubscription(newSub)
+		logError(err, &resp.ResponseCommon, "creating evensub subscription")
+
+		helixClient.SetUserAccessToken(userToken.AccessToken)
+
+		if err != nil || resp.ErrorMessage != "" && resp.ErrorMessage != "subscription already exists" {
+			msg := ""
+			if resp != nil {
+				msg = resp.ErrorMessage
+			}
+			log.Fatal("While creating an event sub for type '%s': %v %s", helix.EventSubTypeStreamOnline, err, msg)
+		} else {
+			log.Success("Twitch Live notifications ready!")
+		}
+	}, &initializer.ModuleInfo{
+		ShouldLoad: func(c *initializer.InitContext) bool {
+			return config.Twitch.ShouldLoad() && config.General.Domain != "localhost"
+		},
+	}, initializer.MOD_HTTP)
 }

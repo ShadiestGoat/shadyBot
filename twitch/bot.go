@@ -123,7 +123,7 @@ func refreshIRC() {
 	go refreshToken()
 }
 
-func startIRC() {
+func setupIRC() {
 	log.Debug("Connecting twitch irc oauth...")
 	ircClient = twitch.NewClient(config.Twitch.AppName, "oauth:"+userToken.AccessToken)
 
