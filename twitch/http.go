@@ -136,6 +136,8 @@ func initHTTP(s *discordgo.Session) {
 		}
 		body, _ := io.ReadAll(r.Body)
 
+		log.Debug("Received live notif info: %s", string(body))
+
 		if !helix.VerifyEventSubNotification(config.Twitch.CustomSecret, r.Header, string(body)) {
 			log.Error("Illegal notif from twitch!! " + string(body))
 			return
@@ -150,12 +152,14 @@ func initHTTP(s *discordgo.Session) {
 
 		// if there's a challenge in the request, respond with only the challenge to verify your eventsub.
 		if vals.Challenge != "" {
+			log.Debug("Challenge resp")
 			w.WriteHeader(200)
 			w.Write([]byte(vals.Challenge))
 			return
 		}
 
 		if config.Channels.Twitch == "" {
+			log.Debug("No twitch announcement channel")
 			return
 		}
 
@@ -191,12 +195,14 @@ func initHTTP(s *discordgo.Session) {
 			roleMention = "\n||<@&" + config.Twitch.Role + ">||"
 		}
 
-		discutils.SendMessage(s, config.Channels.Twitch, &discordgo.MessageSend{
+		_, err = discutils.SendMessage(s, config.Channels.Twitch, &discordgo.MessageSend{
 			Content: "I'm live!!!!!\n" + emb.URL + roleMention,
 			Embeds: []*discordgo.MessageEmbed{
 				&emb,
 			},
 		})
+
+		log.ErrorIfErr(err, "sending the live msg")
 
 		log.Debug("Streaming rn")
 	})
