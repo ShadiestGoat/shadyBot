@@ -125,10 +125,11 @@ func initHTTP(s *discordgo.Session) {
 		log.Success("Twitch Authed!")
 	})
 
-	r.Get(`/live`, func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc(`/live`, func(w http.ResponseWriter, r *http.Request) {
 		if r.Body == nil {
 			return
 		}
+		
 		body, _ := io.ReadAll(r.Body)
 
 		log.Debug("Received live notif info: %s", string(body))
