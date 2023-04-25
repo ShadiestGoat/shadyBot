@@ -71,14 +71,7 @@ var baseCommands = map[string]*TwitchCommand{
 				ToBroadcasterID:   otherStreamer,
 			})
 
-			if err != nil || soResp.ErrorMessage != "" {
-				msg := ""
-				if soResp != nil {
-					msg = soResp.ErrorMessage
-				}
-
-				log.Error("Error when sending twitch so: %v %v", err, msg)
-			}
+			logError(err, &soResp.ResponseCommon, "sending twitch so")
 
 			if sp, ok := config.Twitch.CustomSO[streamer]; ok {
 				return sp

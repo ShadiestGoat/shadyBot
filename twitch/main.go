@@ -3,6 +3,7 @@ package twitch
 import (
 	"errors"
 	"os"
+	"reflect"
 	"strings"
 	"time"
 
@@ -78,9 +79,8 @@ func init() {
 				log.FatalIfErr(err, "creating helix client")
 
 				resp, err := helixClient.RequestAppAccessToken(scopes)
-				log.FatalIfErr(err, "fetching app access token")
-				if resp.ErrorMessage != "" {
-					log.Fatal("While fetching app access token, resp: " + resp.ErrorMessage)
+				if logError(err, &resp.ResponseCommon, "fetching app access token") {
+					log.Fatal("see above")
 				}
 
 				helixClient.SetAppAccessToken(resp.Data.AccessToken)
@@ -116,7 +116,13 @@ func init() {
 				if config.Channels.Twitch != "" && config.General.Domain != "localhost" {
 					helixClient.SetUserAccessToken("")
 
-					resp, err := helixClient.CreateEventSubSubscription(&helix.EventSubSubscription{
+					respSubs, err := helixClient.GetEventSubSubscriptions(&helix.EventSubSubscriptionsParams{
+						Type:   helix.EventSubTypeStreamOnline,
+					})
+
+					logError(err, &resp.ResponseCommon, "fetching eventsub subscriptions")
+
+					newSub := &helix.EventSubSubscription{
 						Type:    helix.EventSubTypeStreamOnline,
 						Version: "1",
 						Condition: helix.EventSubCondition{
@@ -127,7 +133,32 @@ func init() {
 							Callback: BASE_URL + "/live",
 							Secret:   config.Twitch.CustomSecret,
 						},
-					})
+					}
+
+					rmID := ""
+
+					for _, d := range respSubs.Data.EventSubSubscriptions {
+						if d.Type != newSub.Type {
+							continue
+						}
+						if d.Version != newSub.Version || !reflect.DeepEqual(d.Condition, newSub.Condition) {
+							rmID = d.ID
+							break
+						}
+						if !reflect.DeepEqual(d.Transport, newSub.Transport) {
+							rmID = d.ID
+							break
+						}
+					}
+
+					if rmID != "" {
+						resp, err := helixClient.RemoveEventSubSubscription(rmID)
+						logError(err, &resp.ResponseCommon, "removing eventsub subscription")
+						log.Debug("Removing an old and outdates eventsub...")
+					}
+
+					resp, err := helixClient.CreateEventSubSubscription(newSub)
+					logError(err, &resp.ResponseCommon, "creating evensub subscription")
 
 					helixClient.SetUserAccessToken(userToken.AccessToken)
 

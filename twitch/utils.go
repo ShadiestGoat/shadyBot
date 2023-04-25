@@ -5,6 +5,7 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/nicklaw5/helix/v2"
+	"github.com/shadiestgoat/log"
 )
 
 func isAuthed(u *twitch.User) bool {
@@ -34,4 +35,18 @@ func userID(name string) string {
 	}
 
 	return resp.Data.Users[0].ID
+}
+
+func logError(err error, resp *helix.ResponseCommon, ctx string) bool {
+	if err != nil || resp.ErrorMessage != "" {
+		msg := "<empty>"
+		if resp.ErrorMessage != "" {
+			msg = resp.ErrorMessage
+		}
+
+		log.Error("While %s: %v %s", ctx, err, msg)
+		return true
+	}
+	
+	return false
 }
