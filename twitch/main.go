@@ -63,55 +63,6 @@ func init() {
 			go periodicLaunch(stopper)
 
 			initHTTP(c.Discord)
-
-			go func() {
-				for userToken == nil {
-					time.Sleep(100 * time.Millisecond)
-				}
-
-				helixClient, err = helix.NewClient(&helix.Options{
-					ClientID:        config.Twitch.ClientID,
-					ClientSecret:    config.Twitch.ClientSecret,
-					UserAccessToken: userToken.AccessToken,
-					RedirectURI:     BASE_URL,
-					ExtensionOpts:   helix.ExtensionOptions{},
-				})
-				log.FatalIfErr(err, "creating helix client")
-
-				resp, err := helixClient.RequestAppAccessToken(scopes)
-				if logError(err, &resp.ResponseCommon, "fetching app access token") {
-					log.Fatal("see above")
-				}
-
-				helixClient.SetAppAccessToken(resp.Data.AccessToken)
-
-				appToken = &OAuth2{
-					AccessToken:  resp.Data.AccessToken,
-					RefreshToken: resp.Data.RefreshToken,
-					ExpiresIn:    resp.Data.ExpiresIn,
-				}
-
-				OWN_ID = userID(config.Twitch.ChannelName)
-
-				if OWN_ID == "" {
-					log.Fatal("Could not fetch our own twitch ID. Are you sure the twitch channel name is correct?")
-				}
-
-				log.FatalIfErr(err, "Setting up a helix client")
-
-				if config.Discord.InviteURL != "" {
-					baseCommands["discord"] = &TwitchCommand{
-						Exec: func(c *twitch.Client, ctx *twitch.PrivateMessage, args ...string) string {
-							return "You can join my discord at " + config.Discord.InviteURL
-						},
-					}
-				}
-
-				log.Success("Setup for helix done, running irc...")
-
-				go setupIRC()
-				go setupPubSub()
-			}()
 		},
 		&initializer.ModuleInfo{
 			ShouldLoad: func(c *initializer.InitContext) bool {
@@ -125,74 +76,125 @@ func init() {
 	)
 
 	initializer.Register(initializer.MOD_TWITCH_LIVE, func(c *initializer.InitContext) {
-		helixClient.SetUserAccessToken("")
-
-		respSubs, err := helixClient.GetEventSubSubscriptions(&helix.EventSubSubscriptionsParams{
-			Type: helix.EventSubTypeStreamOnline,
-		})
-
-		logError(err, &respSubs.ResponseCommon, "fetching eventsub subscriptions")
-
-		newSub := &helix.EventSubSubscription{
-			Type:    helix.EventSubTypeStreamOnline,
-			Version: "1",
-			Condition: helix.EventSubCondition{
-				BroadcasterUserID: OWN_ID,
-			},
-			Transport: helix.EventSubTransport{
-				Method:   "webhook",
-				Callback: BASE_URL + "/live",
-				Secret:   config.Twitch.CustomSecret,
-			},
-		}
-
-		rmID := []string{}
-
-		log.Debug("New: %#v", newSub)
-		log.Debug("Resp: %#v", respSubs.Data)
-
-		for _, d := range respSubs.Data.EventSubSubscriptions {
-			log.Debug("Old: %#v", d)
-
-			if d.Type != newSub.Type {
-				continue
+		go func() {
+			for userToken == nil {
+				time.Sleep(100 * time.Millisecond)
 			}
-			if d.Version != newSub.Version || !reflect.DeepEqual(d.Condition, newSub.Condition) {
-				rmID = append(rmID, d.ID)
-				continue
-			}
-			if !reflect.DeepEqual(d.Transport, newSub.Transport) {
-				rmID = append(rmID, d.ID)
-				continue
-			}
-			if d.Status == "webhook_callback_verification_failed" {
-				rmID = append(rmID, d.ID)
-				continue
-			}
-		}
 
-		if len(rmID) != 0 {
-			for _, id := range rmID {
-				resp, err := helixClient.RemoveEventSubSubscription(id)
-				logError(err, &resp.ResponseCommon, "removing eventsub subscription")
-				log.Debug("Removing an old and outdates eventsub...")
+			helixClient, err := helix.NewClient(&helix.Options{
+				ClientID:        config.Twitch.ClientID,
+				ClientSecret:    config.Twitch.ClientSecret,
+				UserAccessToken: userToken.AccessToken,
+				RedirectURI:     BASE_URL,
+				ExtensionOpts:   helix.ExtensionOptions{},
+			})
+			
+			log.FatalIfErr(err, "creating helix client")
+
+			resp, err := helixClient.RequestAppAccessToken(scopes)
+			if logError(err, &resp.ResponseCommon, "fetching app access token") {
+				log.Fatal("see above")
 			}
-		}
 
-		resp, err := helixClient.CreateEventSubSubscription(newSub)
-		logError(err, &resp.ResponseCommon, "creating evensub subscription")
+			helixClient.SetAppAccessToken(resp.Data.AccessToken)
 
-		helixClient.SetUserAccessToken(userToken.AccessToken)
-
-		if err != nil || resp.ErrorMessage != "" && resp.ErrorMessage != "subscription already exists" {
-			msg := ""
-			if resp != nil {
-				msg = resp.ErrorMessage
+			appToken = &OAuth2{
+				AccessToken:  resp.Data.AccessToken,
+				RefreshToken: resp.Data.RefreshToken,
+				ExpiresIn:    resp.Data.ExpiresIn,
 			}
-			log.Fatal("While creating an event sub for type '%s': %v %s", helix.EventSubTypeStreamOnline, err, msg)
-		} else {
-			log.Success("Twitch Live notifications ready!")
-		}
+
+			OWN_ID = userID(config.Twitch.ChannelName)
+
+			if OWN_ID == "" {
+				log.Fatal("Could not fetch our own twitch ID. Are you sure the twitch channel name is correct?")
+			}
+
+			log.FatalIfErr(err, "Setting up a helix client")
+
+			if config.Discord.InviteURL != "" {
+				baseCommands["discord"] = &TwitchCommand{
+					Exec: func(c *twitch.Client, ctx *twitch.PrivateMessage, args ...string) string {
+						return "You can join my discord at " + config.Discord.InviteURL
+					},
+				}
+			}
+
+			log.Success("Setup for helix done, running irc...")
+
+			go setupIRC()
+			go setupPubSub()
+
+			helixClient.SetUserAccessToken("")
+	
+			respSubs, err := helixClient.GetEventSubSubscriptions(&helix.EventSubSubscriptionsParams{
+				Type: helix.EventSubTypeStreamOnline,
+			})
+	
+			logError(err, &respSubs.ResponseCommon, "fetching eventsub subscriptions")
+	
+			newSub := &helix.EventSubSubscription{
+				Type:    helix.EventSubTypeStreamOnline,
+				Version: "1",
+				Condition: helix.EventSubCondition{
+					BroadcasterUserID: OWN_ID,
+				},
+				Transport: helix.EventSubTransport{
+					Method:   "webhook",
+					Callback: BASE_URL + "/live",
+					Secret:   config.Twitch.CustomSecret,
+				},
+			}
+	
+			rmID := []string{}
+	
+			log.Debug("New: %#v", newSub)
+			log.Debug("Resp: %#v", respSubs.Data)
+	
+			for _, d := range respSubs.Data.EventSubSubscriptions {
+				log.Debug("Old: %#v", d)
+	
+				if d.Type != newSub.Type {
+					continue
+				}
+				if d.Version != newSub.Version || !reflect.DeepEqual(d.Condition, newSub.Condition) {
+					rmID = append(rmID, d.ID)
+					continue
+				}
+				if !reflect.DeepEqual(d.Transport, newSub.Transport) {
+					rmID = append(rmID, d.ID)
+					continue
+				}
+				if d.Status == "webhook_callback_verification_failed" {
+					rmID = append(rmID, d.ID)
+					continue
+				}
+			}
+	
+			if len(rmID) != 0 {
+				for _, id := range rmID {
+					resp, err := helixClient.RemoveEventSubSubscription(id)
+					logError(err, &resp.ResponseCommon, "removing eventsub subscription")
+					log.Debug("Removing an old and outdates eventsub...")
+				}
+			}
+	
+			respNewSub, err := helixClient.CreateEventSubSubscription(newSub)
+			logError(err, &respNewSub.ResponseCommon, "creating evensub subscription")
+	
+			helixClient.SetUserAccessToken(userToken.AccessToken)
+	
+			if err != nil || respNewSub.ErrorMessage != "" && respNewSub.ErrorMessage != "subscription already exists" {
+				msg := ""
+				if respNewSub != nil {
+					msg = respNewSub.ErrorMessage
+				}
+				log.Fatal("While creating an event sub for type '%s': %v %s", helix.EventSubTypeStreamOnline, err, msg)
+			} else {
+				log.Success("Twitch Live notifications ready!")
+			}
+		}()
+		
 	}, &initializer.ModuleInfo{
 		ShouldLoad: func(c *initializer.InitContext) bool {
 			return config.Twitch.ShouldLoad() && config.General.Domain != "localhost"
