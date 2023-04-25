@@ -138,6 +138,7 @@ func init() {
 					rmID := ""
 
 					log.Debug("New: %#v", newSub)
+					log.Debug("Resp: %#v", respSubs.Data)
 					
 					for _, d := range respSubs.Data.EventSubSubscriptions {
 						log.Debug("Old: %#v", d)
