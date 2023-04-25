@@ -73,3 +73,9 @@ Sometimes, I shoutout a user very often. For this, I have a custom shoutout for 
 2. Download & Compile this code with `go build` (don't worry - build go apps is really fast & easy, this should take you less than a minute!)
 3. Run the binary output
 4. Profit
+
+## Roadmap/What is left
+
+- [ ] A config option to disable modules
+  - [ ] Refactor the way module choose to load/not to load
+- [ ] Refactor the way twitch is set up - there are 2 'modules' one pre-http and 1 post, and that should not be
