@@ -64,7 +64,7 @@ type twitch struct {
 	AppName      string `conf:"app_name,twitch module will not be loaded"`
 	ChannelName  string `conf:"channel_name,twitch module will not be loaded"`
 	CustomSecret string `conf:"custom_secret,twitch module will not be loaded"`
-	Role         string `conf:"role,no one will be pinged about a new twitch stream"`
+	Role         string `conf:"ping_role,no one will be pinged about a new twitch stream"`
 	CustomSO     map[string]string
 }
 
