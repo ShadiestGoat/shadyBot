@@ -26,13 +26,14 @@ type Parsable interface {
 
 func load() {
 	secMap := map[string]any{
+		"Debug":     &debugV,
 		"General":   &General,
 		"Discord":   &Discord,
 		"Channels":  &Channels,
 		"Warnings":  &Warnings,
 		"Donations": &Donations,
 		"Twitch":    &Twitch,
-		"Debug":     &debugV,
+		"XP": 		 &XP,
 	}
 
 	b1, _ := os.ReadFile("config.conf")

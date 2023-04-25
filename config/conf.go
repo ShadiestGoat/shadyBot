@@ -19,6 +19,18 @@ var (
 	General  = general{
 		Port: "3000",
 	}
+	XP = xp{
+		MsgMin: 16,
+		MsgMax: 25,
+
+		VCMin: 6,
+		VCMax: 10,
+
+		VCVideoOrStream:  1.5,
+		VCVideoAndStream: 1.75,
+		VCMute:           0.15,
+		VCAlone:          0.15,
+	}
 )
 
 type general struct {
@@ -32,6 +44,7 @@ type discord struct {
 	Token     string   `conf:"token,required"`
 	InviteURL string   `conf:"invite_url,the !discord command will not be available on twitch"`
 	AutoRoles []string `conf:"auto_roles,there will be no roles added on user join"`
+	OwnerID   string   `conf:"owner_id,owner-specific features won't work :("`
 }
 
 type channels struct {
@@ -68,6 +81,19 @@ type twitch struct {
 	CustomSO     map[string]string
 }
 
+type xp struct {
+	MsgMin int `conf:"msg_min"`
+	MsgMax int `conf:"msg_max"`
+
+	VCMin int `conf:"vc_min"`
+	VCMax int `conf:"vc_max"`
+
+	VCVideoOrStream  float64 `conf:"vc_video"`
+	VCVideoAndStream float64 `conf:"vc_video_2"`
+	VCMute           float64 `conf:"vc_mute"`
+	VCAlone          float64 `conf:"vc_alone"`
+}
+
 func (t twitch) ShouldLoad() bool {
 	opts := []string{
 		General.Domain,
@@ -77,7 +103,7 @@ func (t twitch) ShouldLoad() bool {
 		t.ChannelName,
 		t.CustomSecret,
 	}
-	
+
 	for _, o := range opts {
 		if o == "" {
 			return false

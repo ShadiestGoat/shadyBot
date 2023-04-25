@@ -24,7 +24,7 @@ func multiplierPremium(mem *discordgo.Member) float64 {
 
 // Done since I can't be a donor :(
 func multiplierOwner(mem *discordgo.Member) float64 {
-	if mem.User.ID == config.OWNER_ID {
+	if mem.User.ID == config.Discord.OwnerID {
 		return 1.75
 	}
 	return 1

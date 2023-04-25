@@ -44,20 +44,20 @@ func handleVCXp(s *discordgo.Session, closer chan bool) {
 					multiplier := 1.0
 
 					if vc.SelfStream && vc.SelfVideo {
-						multiplier *= config.XP_VC_VIDEO_AND_STREAM
+						multiplier *= config.XP.VCVideoAndStream
 					} else if vc.SelfStream || vc.SelfVideo {
-						multiplier *= config.XP_VC_VIDEO
+						multiplier *= config.XP.VCVideoOrStream
 					}
 
 					if vc.SelfMute {
-						multiplier *= config.XP_VC_MUTE
+						multiplier *= config.XP.VCMute
 					}
 
-					if chanCount[vc.ChannelID] < 2 {
-						multiplier *= config.XP_VC_ALONE
+					if chanCount[vc.ChannelID] <= 1 {
+						multiplier *= config.XP.VCAlone
 					}
 
-					xpGiven := int(math.Round(float64(utils.RandInt(config.XP_VC_MIN, config.XP_VC_MAX)) * multiplier))
+					xpGiven := int(math.Round(float64(utils.RandInt(config.XP.VCMin, config.XP.VCMax)) * multiplier))
 
 					ChangeXP(s, vc.UserID, xpGiven, XPS_VC)
 				}

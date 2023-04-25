@@ -20,7 +20,7 @@ func init() {
 
 		if err == nil {
 			if time.Since(lastMsg) >= time.Minute {
-				ChangeXP(s, m.Author.ID, givenXP(config.XP_MSG_MIN, config.XP_MSG_MAX, multiplier(s, m.Author.ID)), XPS_MSG)
+				ChangeXP(s, m.Author.ID, givenXP(config.XP.MsgMin, config.XP.MsgMax, multiplier(s, m.Author.ID)), XPS_MSG)
 			}
 		}
 
