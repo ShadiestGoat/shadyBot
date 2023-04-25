@@ -5,6 +5,7 @@ import (
 
 	"github.com/nicklaw5/helix/v2"
 	twitchpubsub "github.com/pajlada/go-twitch-pubsub"
+	"github.com/shadiestgoat/log"
 	"github.com/shadiestgoat/shadyBot/config"
 	"github.com/shadiestgoat/shadyBot/db"
 )
@@ -32,9 +33,21 @@ func acceptPoints(d *twitchpubsub.PointsEvent) {
 	updateChannelPoints(d, "FULFILLED")
 }
 
-func pubSub() {
-	pubSubClient = twitchpubsub.NewClient(twitchpubsub.DefaultHost)
+func refreshPubSub() {
+	pubSubClient.Disconnect()
+	pubSubListen()
+	log.ErrorIfErr(pubSubClient.Start(), "pubsub client")
+	go refreshToken()
+}
+
+func pubSubListen() {
 	pubSubClient.Listen("channel-points-channel-v1."+OWN_ID, userToken.AccessToken)
+}
+
+func setupPubSub() {
+	pubSubClient = twitchpubsub.NewClient(twitchpubsub.DefaultHost)
+	pubSubListen()
+	
 	pubSubClient.OnPointsEvent(func(_ string, data *twitchpubsub.PointsEvent) {
 
 		switch data.Reward.Title {
@@ -65,5 +78,6 @@ func pubSub() {
 		}
 	})
 
-	pubSubClient.Start()
+	log.ErrorIfErr(pubSubClient.Start(), "pubsub client")
+	go refreshToken()
 }

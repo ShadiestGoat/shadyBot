@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -34,7 +35,14 @@ type OAuth2 struct {
 	ExpiresIn    int    `json:"expires_in"`
 }
 
+var refreshing = atomic.Bool{}
+
 func refreshToken() {
+	if refreshing.Load() {
+		return
+	}
+	refreshing.Store(true)
+	
 	if userToken == nil || helixClient == nil {
 		return
 	}
@@ -50,7 +58,12 @@ func refreshToken() {
 	}
 
 	helixClient.SetUserAccessToken(userToken.AccessToken)
-	go twitchBot()
+
+	go refreshIRC()
+	go refreshPubSub()
+
+	time.Sleep(2 * time.Second)
+	refreshing.Store(false)
 }
 
 type eventSubNotification struct {

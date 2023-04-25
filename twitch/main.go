@@ -109,7 +109,7 @@ func init() {
 
 				log.Success("Setup for helix done, running irc...")
 
-				go twitchBot()
+				go startIRC()
 
 				log.Success("twitch irc bot setup complete! Adding notifications...")
 
@@ -142,7 +142,7 @@ func init() {
 					}
 				}
 
-				go pubSub()
+				go setupPubSub()
 			}()
 		},
 		&initializer.ModuleInfo{

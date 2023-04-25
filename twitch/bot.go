@@ -122,14 +122,17 @@ var baseCommands = map[string]*TwitchCommand{
 	},
 }
 
-func twitchBot() {
-	log.Debug("(Re)Connecting twitch irc oauth...")
-	if ircClient == nil {
-		ircClient = twitch.NewClient(config.Twitch.AppName, "")
-	} else {
-		ircClient.Disconnect()
-	}
+func refreshIRC() {
+	ircClient.Disconnect()
 	ircClient.SetIRCToken("oauth:" + userToken.AccessToken)
+	ircClient.Join(config.Twitch.ChannelName)
+	log.ErrorIfErr(ircClient.Connect(), "running irc client")
+	go refreshToken()
+}
+
+func startIRC() {
+	log.Debug("Connecting twitch irc oauth...")
+	ircClient = twitch.NewClient(config.Twitch.AppName, "oauth:" + userToken.AccessToken)
 
 	ircClient.Join(config.Twitch.ChannelName)
 
