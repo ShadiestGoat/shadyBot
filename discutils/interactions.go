@@ -91,7 +91,7 @@ func parseCmd(d []*discordgo.ApplicationCommandInteractionDataOption, layer int)
 			// so that you can do .StringValue()
 			opt.Type = discordgo.ApplicationCommandOptionString
 			opt.Value = opt.Name
-			
+
 			r[fmt.Sprintf("cmd-%d", layer)] = opt
 		default:
 			r[opt.Name] = opt

@@ -117,8 +117,7 @@ func cmdSlots() {
 			}
 		}
 
-		
-		FinishGame(userID, int(math.Abs(float64(total) - float64(lines) * LINE_COST)), total > 0, GT_SLOTS)
+		FinishGame(userID, int(math.Abs(float64(total)-float64(lines)*LINE_COST)), total > 0, GT_SLOTS)
 
 		discutils.IResp(s, i.Interaction, &discutils.IRespOpts{
 			Embed:   emb,
@@ -233,7 +232,7 @@ func embedSlotsWithRewards(lines int, cols [3][]rune) (*discordgo.MessageEmbed, 
 		rewardStr += "\n"
 	}
 
-	rewardStr += "████████████\n**Total: " + fmt.Sprint(total - lines * LINE_COST) + "**"
+	rewardStr += "████████████\n**Total: " + fmt.Sprint(total-lines*LINE_COST) + "**"
 
 	emb.Fields = append(emb.Fields, &discordgo.MessageEmbedField{
 		Name:   "Rewards",

@@ -144,7 +144,7 @@ func cmdBlackjack() {
 			// Dealer's turn
 
 			discutils.IResp(s, i.Interaction, game.respOpts(), responded)
-			
+
 			responded = discutils.I_EDIT
 
 			var state = game.dealerLoopState()

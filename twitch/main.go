@@ -16,13 +16,15 @@ import (
 )
 
 var (
-	userToken    *OAuth2
-	appToken     *OAuth2
+	userToken *OAuth2
+	appToken  *OAuth2
+
 	helixClient  *helix.Client
 	ircClient    *twitch.Client
 	pubSubClient *twitchpubsub.Client
-	OWN_ID       string
-	BASE_URL     string
+
+	OWN_ID   string
+	BASE_URL string
 )
 
 func init() {
@@ -67,11 +69,11 @@ func init() {
 				}
 
 				helixClient, err = helix.NewClient(&helix.Options{
-					ClientID:       config.Twitch.ClientID,
-					ClientSecret:   config.Twitch.ClientSecret,
+					ClientID:        config.Twitch.ClientID,
+					ClientSecret:    config.Twitch.ClientSecret,
 					UserAccessToken: userToken.AccessToken,
-					RedirectURI:    BASE_URL,
-					ExtensionOpts:  helix.ExtensionOptions{},
+					RedirectURI:     BASE_URL,
+					ExtensionOpts:   helix.ExtensionOptions{},
 				})
 				log.FatalIfErr(err, "creating helix client")
 
@@ -113,10 +115,10 @@ func init() {
 
 				if config.Channels.Twitch != "" && config.General.Domain != "localhost" {
 					helixClient.SetUserAccessToken("")
-					
+
 					resp, err := helixClient.CreateEventSubSubscription(&helix.EventSubSubscription{
-						Type:      helix.EventSubTypeStreamOnline,
-						Version:   "1",
+						Type:    helix.EventSubTypeStreamOnline,
+						Version: "1",
 						Condition: helix.EventSubCondition{
 							BroadcasterUserID: OWN_ID,
 						},
@@ -128,7 +130,7 @@ func init() {
 					})
 
 					helixClient.SetUserAccessToken(userToken.AccessToken)
-				
+
 					if err != nil || resp.ErrorMessage != "" && resp.ErrorMessage != "subscription already exists" {
 						msg := ""
 						if resp != nil {

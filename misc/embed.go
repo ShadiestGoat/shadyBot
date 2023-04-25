@@ -139,7 +139,7 @@ func cmdEmbed() {
 		}
 
 		discutils.IResp(s, i.Interaction, &discutils.IRespOpts{
-			Embed:  &emb,
+			Embed: &emb,
 			Comps: []discordgo.MessageComponent{
 				discordgo.Button{
 					Label:    "Confirm, send it!",
