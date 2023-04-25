@@ -209,7 +209,6 @@ func init() {
 	
 			log.Success("Twitch Live notifications ready!")
 		}()
-		
 	}, &initializer.ModuleInfo{
 		ShouldLoad: func(c *initializer.InitContext) bool {
 			return config.Twitch.ShouldLoad() && config.General.Domain != "localhost"
