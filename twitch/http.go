@@ -44,17 +44,12 @@ func refreshToken() {
 		return
 	}
 
-	userToken = &OAuth2{
+	*userToken = OAuth2{
 		AccessToken:  resp.Data.AccessToken,
 		RefreshToken: resp.Data.RefreshToken,
 	}
 
 	helixClient.SetUserAccessToken(userToken.AccessToken)
-
-	go func() {
-		time.Sleep(time.Duration(resp.Data.ExpiresIn-5) * time.Second)
-		refreshToken()
-	}()
 }
 
 type eventSubNotification struct {

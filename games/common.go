@@ -180,7 +180,7 @@ func FinishGame(userID string, bet int, won bool, game GameType) {
 		if !db.Exists(`gambling`, `id = $1 AND game = $2`, userID, game) {
 			db.Exec(`INSERT INTO gambling (id, game, `+col+`) VALUES ($1, $2, $3)`, userID, game, bet)
 		} else {
-			db.Exec(`UPDATES gambling SET `+col+` = `+col+`+`+fmt.Sprint(bet)+` WHERE id = $1`, userID)
+			db.Exec(`UPDATE gambling SET `+col+` = `+col+`+`+fmt.Sprint(bet)+` WHERE id = $1`, userID)
 		}
 	}
 

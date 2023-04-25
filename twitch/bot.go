@@ -149,7 +149,7 @@ func twitchBot() {
 			resp = cmd.Exec(ircClient, &message, args...)
 			// prevent ppl from doing infinite loops! This only works if the bot's id is also my id!!!
 		} else if message.User.ID != OWN_ID {
-			db.QueryRow(`SELECT resp WHERE cmd = $1 AND usr = $2`, []any{command, message.User.ID}, &resp)
+			db.QueryRow(`SELECT resp FROM twitch_cmd WHERE cmd = $1 AND usr = $2`, []any{command, message.User.ID}, &resp)
 		}
 
 		if resp != "" {
