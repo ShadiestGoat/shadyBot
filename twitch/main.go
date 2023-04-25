@@ -82,8 +82,9 @@ func init() {
 			}
 
 			log.Debug("Starting to actually setup twitch...")
-
-			helixClient, err := helix.NewClient(&helix.Options{
+			var err error
+			
+			helixClient, err = helix.NewClient(&helix.Options{
 				ClientID:        config.Twitch.ClientID,
 				ClientSecret:    config.Twitch.ClientSecret,
 				UserAccessToken: userToken.AccessToken,
