@@ -137,8 +137,11 @@ func init() {
 
 					rmID := ""
 
+					log.Debug("New: %#v", newSub)
+					
 					for _, d := range respSubs.Data.EventSubSubscriptions {
-						log.Debug("Old: %#v\nNew: %#v", d, newSub)
+						log.Debug("Old: %#v", d)
+
 						if d.Type != newSub.Type {
 							continue
 						}
