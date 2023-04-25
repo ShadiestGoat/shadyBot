@@ -47,7 +47,7 @@ func pubSubListen() {
 func setupPubSub() {
 	pubSubClient = twitchpubsub.NewClient(twitchpubsub.DefaultHost)
 	pubSubListen()
-	
+
 	pubSubClient.OnPointsEvent(func(_ string, data *twitchpubsub.PointsEvent) {
 
 		switch data.Reward.Title {

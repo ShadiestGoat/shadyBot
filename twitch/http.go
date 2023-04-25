@@ -42,7 +42,7 @@ func refreshToken() {
 		return
 	}
 	refreshing.Store(true)
-	
+
 	if userToken == nil || helixClient == nil {
 		return
 	}

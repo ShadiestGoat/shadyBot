@@ -125,7 +125,7 @@ func refreshIRC() {
 
 func startIRC() {
 	log.Debug("Connecting twitch irc oauth...")
-	ircClient = twitch.NewClient(config.Twitch.AppName, "oauth:" + userToken.AccessToken)
+	ircClient = twitch.NewClient(config.Twitch.AppName, "oauth:"+userToken.AccessToken)
 
 	ircClient.Join(config.Twitch.ChannelName)
 

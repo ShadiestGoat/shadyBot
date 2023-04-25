@@ -47,6 +47,6 @@ func logError(err error, resp *helix.ResponseCommon, ctx string) bool {
 		log.Error("While %s: %v %s", ctx, err, msg)
 		return true
 	}
-	
+
 	return false
 }

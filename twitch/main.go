@@ -117,7 +117,7 @@ func init() {
 					helixClient.SetUserAccessToken("")
 
 					respSubs, err := helixClient.GetEventSubSubscriptions(&helix.EventSubSubscriptionsParams{
-						Type:   helix.EventSubTypeStreamOnline,
+						Type: helix.EventSubTypeStreamOnline,
 					})
 
 					logError(err, &resp.ResponseCommon, "fetching eventsub subscriptions")
