@@ -17,19 +17,18 @@ var OnConnect = make(chan bool, 5)
 func Connect() {
 	Close()
 
-	if failAmt != 0 {
-		d := time.Duration(math.Pow(2, float64(failAmt))) * time.Second
-		d += 10 * time.Second
+	// Always sleep, even if its for like 10 seconds
+	d := time.Duration(math.Pow(2, float64(failAmt))) * time.Second
+	d += 10 * time.Second
 
-		if d > 2*time.Minute {
-			d = 2 * time.Minute
-		}
-
-		// Small jitter <3
-		d += time.Duration(math.Round(rand.Float64() * float64(time.Second)))
-
-		time.Sleep(d)
+	if d > 2*time.Minute {
+		d = 2 * time.Minute
 	}
+
+	// Small jitter <3
+	d += time.Duration(math.Round(rand.Float64() * float64(time.Second)))
+
+	time.Sleep(d)
 
 	err := start()
 	if err != nil {
