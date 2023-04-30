@@ -124,10 +124,7 @@ func init() {
 				}
 			}
 
-			log.Success("Setup for helix done, running irc...")
-
-			go setupIRC()
-			go setupPubSub()
+			log.Success("Setup for helix done...")
 
 			helixClient.SetUserAccessToken("")
 
@@ -199,6 +196,9 @@ func init() {
 			}
 
 			helixClient.SetUserAccessToken(userToken.AccessToken)
+
+			go setupIRC()
+			go setupPubSub()
 
 			log.Success("Twitch Live notifications ready!")
 		}()
