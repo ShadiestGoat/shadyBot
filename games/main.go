@@ -2,25 +2,49 @@ package games
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/shadiestgoat/shadyBot/config"
 	"github.com/shadiestgoat/shadyBot/db"
 	"github.com/shadiestgoat/shadyBot/discord"
 	"github.com/shadiestgoat/shadyBot/discutils"
+	"github.com/shadiestgoat/shadyBot/games/connect4"
 	"github.com/shadiestgoat/shadyBot/initializer"
 	"github.com/shadiestgoat/shadyBot/utils"
 )
 
 func init() {
-	cmdBlackjack()
-	cmdSlots()
-	cmdCoin()
-	cmdGambler()
-
 	closer := make(chan bool, 2)
-
+	
 	initializer.Register(initializer.MOD_GAMES, func(c *initializer.InitContext) {
-		go ActivityStore.Loop(c.Discord, closer)
+		disabled := map[string]bool{}
+
+		for _, d := range config.Games.Disable {
+			disabled[strings.ToLower(d)] = true
+		}
+
+		if !disabled["connect4"] {
+			connect4.Init()
+		}
+
+		if !disabled["blackjack"] {
+			cmdBlackjack()
+		}
+		if !disabled["slots"] {
+			cmdSlots()
+		}
+		if !disabled["coinflip"] {
+			cmdCoin()
+		}
+		
+		disabledAllGambling := disabled["slots"] && disabled["coinflip"] && disabled["blackjack"]
+
+		if !disabledAllGambling {
+			cmdGambler()
+			go ActivityStore.Loop(c.Discord, closer)
+		}
+		
 	}, nil, initializer.MOD_DISCORD)
 
 	initializer.RegisterCloser(initializer.MOD_GAMES, func() {

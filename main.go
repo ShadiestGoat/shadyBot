@@ -10,7 +10,6 @@ import (
 	_ "github.com/shadiestgoat/shadyBot/autoroles"
 	_ "github.com/shadiestgoat/shadyBot/characters"
 	_ "github.com/shadiestgoat/shadyBot/config"
-	_ "github.com/shadiestgoat/shadyBot/connect4"
 	_ "github.com/shadiestgoat/shadyBot/db"
 	_ "github.com/shadiestgoat/shadyBot/discord"
 	_ "github.com/shadiestgoat/shadyBot/discutils"

@@ -31,6 +31,9 @@ var (
 		VCMute:           0.15,
 		VCAlone:          0.15,
 	}
+	Games = games{
+		Disable: []string{},
+	}
 )
 
 type general struct {
@@ -118,4 +121,8 @@ func (t twitch) ShouldLoad() bool {
 type debug struct {
 	Mention string `conf:"mention"`
 	WebHook string `conf:"webhook,warnings & errors will not be sent to anything on discord"`
+}
+
+type games struct {
+	Disable []string `conf:"disable"`
 }

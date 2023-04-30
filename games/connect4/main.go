@@ -12,7 +12,7 @@ const (
 	EMB_TITLE = "🎮 - Connect 4 Invitation"
 )
 
-func init() {
+func Init() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
 		Type:                     discordgo.ChatApplicationCommand,
 		Name:                     "connect-4",
