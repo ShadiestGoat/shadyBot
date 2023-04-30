@@ -92,7 +92,6 @@ func fetchOldRedemptions(after string) {
 	}
 
 	urlToUse := "https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions?" + v.Encode()
-	log.Debug(urlToUse)
 
 	req, _ := http.NewRequest("GET", urlToUse, nil)
 	req.Header.Set("Authorization", "Bearer " + userToken.AccessToken)
