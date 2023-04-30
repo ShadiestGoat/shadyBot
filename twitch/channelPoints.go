@@ -147,6 +147,11 @@ func setupPubSub() {
 	resp, err := helixClient.GetCustomRewards(&helix.GetCustomRewardsParams{
 		BroadcasterID: config.Twitch.OwnID,
 	})
+	
+	log.Debug(config.Twitch.OwnID)
+	log.Debug(helixClient.GetUserAccessToken())
+	log.Debug(config.Twitch.ClientID)
+
 	logError(err, &resp.ResponseCommon, "fetching custom rewards")
 	
 	allTitles := ""
