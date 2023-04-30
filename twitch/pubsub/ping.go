@@ -51,6 +51,10 @@ func startPing() {
 }
 
 func doPing() {
+	if wsConn == nil {
+		log.Warn("PubSub WS Conn is nil when pinging!")
+		return
+	}
 	err := wsConn.Write(context.Background(), websocket.MessageText, msg_ping)
 	if log.ErrorIfErr(err, "writing to pubsub conn") {
 		go Connect()
