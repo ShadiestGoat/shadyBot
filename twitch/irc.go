@@ -1,6 +1,7 @@
 package twitch
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -120,15 +121,18 @@ func refreshIRC() {
 	ircClient.Disconnect()
 	ircClient.SetIRCToken("oauth:" + userToken.AccessToken)
 	ircClient.Join(config.Twitch.ChannelName)
-	log.ErrorIfErr(ircClient.Connect(), "running irc client")
+
+	err := ircClient.Connect()
+	if !errors.Is(err, twitch.ErrClientDisconnected) {
+		log.ErrorIfErr(err, "running irc client")
+	}
+
 	go refreshToken()
 }
 
 func setupIRC() {
 	log.Debug("Connecting twitch irc oauth...")
 	ircClient = twitch.NewClient(config.Twitch.AppName, "oauth:"+userToken.AccessToken)
-
-	ircClient.Join(config.Twitch.ChannelName)
 
 	ircClient.OnConnect(func() {
 		log.Success("IRC Loaded <3")
@@ -166,6 +170,5 @@ func setupIRC() {
 		}
 	})
 
-	log.ErrorIfErr(ircClient.Connect(), "running irc client")
-	go refreshToken()
+	go refreshIRC()
 }
