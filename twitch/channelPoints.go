@@ -162,7 +162,7 @@ func setupPubSub() {
 			BroadcasterID:                     config.Twitch.OwnID,
 			Title:                             "Custom Twitch Command",
 			Prompt:                            "Add a command specifically made for you. Format is \"command: what to respond with\"",
-			Cost:                              4_000,
+			Cost:                              3_200,
 			IsEnabled:                         true,
 			BackgroundColor:                   "#0d1117",
 			IsUserInputRequired:               true,
