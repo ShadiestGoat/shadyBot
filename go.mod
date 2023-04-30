@@ -6,10 +6,14 @@ require (
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/nicklaw5/helix/v2 v2.22.1
-	github.com/pajlada/go-twitch-pubsub v0.0.4
 )
 
-require github.com/shadiestgoat/log v1.0.3
+require (
+	github.com/shadiestgoat/log v1.0.3
+	nhooyr.io/websocket v1.8.7
+)
+
+require github.com/klauspost/compress v1.10.3 // indirect
 
 require (
 	github.com/gorilla/websocket v1.5.0 // indirect

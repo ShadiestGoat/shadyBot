@@ -5,6 +5,7 @@
         "initors",
         "roleassign",
         "twitchpubsub",
+        "wsjson",
         "xputils"
     ]
 }

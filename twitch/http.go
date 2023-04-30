@@ -43,6 +43,9 @@ func refreshToken() {
 	}
 	refreshing.Store(true)
 
+	// Just in case <3, to get rid of the slower connections
+	time.Sleep(5 * time.Second)
+
 	if userToken == nil || helixClient == nil {
 		return
 	}
@@ -64,6 +67,11 @@ func refreshToken() {
 
 	time.Sleep(2 * time.Second)
 	refreshing.Store(false)
+
+	go func ()  {
+		time.Sleep(time.Duration(userToken.ExpiresIn - 10) * time.Second)
+		go refreshToken()
+	}()
 }
 
 type eventSubNotification struct {
@@ -122,6 +130,11 @@ func initHTTP(s *discordgo.Session) {
 
 		userToken = authTMP
 
+		go func ()  {
+			time.Sleep(time.Duration(userToken.ExpiresIn - 10) * time.Second)
+			go refreshToken()
+		}()
+
 		log.Success("Twitch Authed!")
 	})
 
@@ -176,7 +189,7 @@ func initHTTP(s *discordgo.Session) {
 
 		resp, err := helixClient.GetStreams(&helix.StreamsParams{
 			UserIDs: []string{
-				OWN_ID,
+				config.Twitch.OwnID,
 			},
 		})
 

@@ -67,9 +67,9 @@ var baseCommands = map[string]*TwitchCommand{
 			}
 
 			soResp, err := helixClient.SendShoutout(&helix.SendShoutoutParams{
-				FromBroadcasterID: OWN_ID,
+				FromBroadcasterID: config.Twitch.OwnID,
 				ToBroadcasterID:   otherStreamer,
-				ModeratorID: OWN_ID,
+				ModeratorID: config.Twitch.OwnID,
 			})
 
 			logError(err, &soResp.ResponseCommon, "sending twitch so")
@@ -157,7 +157,7 @@ func setupIRC() {
 
 			resp = cmd.Exec(ircClient, &message, args...)
 			// prevent ppl from doing infinite loops! This only works if the bot's id is also my id!!!
-		} else if message.User.ID != OWN_ID {
+		} else if message.User.ID != config.Twitch.OwnID {
 			db.QueryRow(`SELECT resp FROM twitch_cmd WHERE cmd = $1 AND usr = $2`, []any{command, message.User.ID}, &resp)
 		}
 

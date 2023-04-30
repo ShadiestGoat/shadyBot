@@ -9,7 +9,6 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/nicklaw5/helix/v2"
-	twitchpubsub "github.com/pajlada/go-twitch-pubsub"
 	"github.com/shadiestgoat/initutils"
 	"github.com/shadiestgoat/log"
 	"github.com/shadiestgoat/shadyBot/config"
@@ -22,9 +21,7 @@ var (
 
 	helixClient  *helix.Client
 	ircClient    *twitch.Client
-	pubSubClient *twitchpubsub.Client
 
-	OWN_ID   string
 	BASE_URL string
 )
 
@@ -111,9 +108,9 @@ func init() {
 
 			log.Debug("Setup helix! Woohoo!!")
 
-			OWN_ID = userID(config.Twitch.ChannelName)
+			config.Twitch.OwnID = userID(config.Twitch.ChannelName)
 
-			if OWN_ID == "" {
+			if config.Twitch.OwnID == "" {
 				log.Fatal("Could not fetch our own twitch ID. Are you sure the twitch channel name is correct?")
 			}
 
@@ -144,7 +141,7 @@ func init() {
 				Type:    helix.EventSubTypeStreamOnline,
 				Version: "1",
 				Condition: helix.EventSubCondition{
-					BroadcasterUserID: OWN_ID,
+					BroadcasterUserID: config.Twitch.OwnID,
 				},
 				Transport: helix.EventSubTransport{
 					Method:   "webhook",
