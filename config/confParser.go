@@ -33,7 +33,7 @@ func load() {
 		"Warnings":  &Warnings,
 		"Donations": &Donations,
 		"Twitch":    &Twitch,
-		"XP": 		 &XP,
+		"XP":        &XP,
 	}
 
 	b1, _ := os.ReadFile("config.conf")

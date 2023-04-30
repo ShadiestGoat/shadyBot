@@ -25,12 +25,12 @@ func updateChannelPoints(rewardID string, redemptionID string, s string) {
 }
 
 // reject channel points
-func rejectPoints(rewardID string, redemptionID string,) {
+func rejectPoints(rewardID string, redemptionID string) {
 	updateChannelPoints(rewardID, redemptionID, "CANCELED")
 }
 
 // reject channel points
-func acceptPoints(rewardID string, redemptionID string,) {
+func acceptPoints(rewardID string, redemptionID string) {
 	updateChannelPoints(rewardID, redemptionID, "FULFILLED")
 }
 
@@ -40,7 +40,7 @@ func refreshPubSub() {
 }
 
 var closeOnConnect = make(chan bool, 5)
-var closeOnRedeem  = make(chan bool, 5)
+var closeOnRedeem = make(chan bool, 5)
 
 func handleReward(data *pubsub.Redemption) {
 	if data.RewardID != twitchCustomCmdID {
@@ -75,8 +75,8 @@ func handleReward(data *pubsub.Redemption) {
 var twitchCustomCmdID = ""
 
 type channelPointRedemptionResp struct {
-	Data []*helix.ChannelCustomRewardsRedemption `json:"data"`
-	Pagination helix.Pagination `json:"pagination"`
+	Data       []*helix.ChannelCustomRewardsRedemption `json:"data"`
+	Pagination helix.Pagination                        `json:"pagination"`
 }
 
 func fetchOldRedemptions(after string) {
@@ -91,11 +91,11 @@ func fetchOldRedemptions(after string) {
 
 	urlToUse := "https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions?" + v.Encode()
 	req, _ := http.NewRequest("GET", urlToUse, nil)
-	req.Header.Set("Authorization", "Bearer " + userToken.AccessToken)
+	req.Header.Set("Authorization", "Bearer "+userToken.AccessToken)
 	req.Header.Set("Client-ID", config.Twitch.ClientID)
 
 	resp, err := http.DefaultClient.Do(req)
-	// d := 
+	// d :=
 	// helix.Pagination
 
 	if err != nil || resp.StatusCode != 200 {
@@ -115,7 +115,7 @@ func fetchOldRedemptions(after string) {
 
 	err = json.NewDecoder(resp.Body).Decode(&respBody)
 	if log.ErrorIfErr(err, "decoding resp") {
-		return	
+		return
 	}
 
 	for _, d := range respBody.Data {
@@ -145,7 +145,7 @@ func setupPubSub() {
 	}
 
 	resp, err := helixClient.GetCustomRewards(&helix.GetCustomRewardsParams{
-		BroadcasterID:         config.Twitch.OwnID,
+		BroadcasterID: config.Twitch.OwnID,
 	})
 	log.FatalIfErr(err, "Fetching own custom rewards")
 
@@ -162,25 +162,25 @@ func setupPubSub() {
 	}
 
 	// Basically, whenever we reconnect, we should handle any previous stuff that was redeemed
-	go func () {
+	go func() {
 		for {
 			select {
-			case <- pubsub.OnConnect:
+			case <-pubsub.OnConnect:
 				log.Success("Connected to pubsub!")
 				fetchOldRedemptions("")
-			case <- closeOnConnect:
+			case <-closeOnConnect:
 				return
 			}
 		}
 	}()
 
 	// Basically, whenever we reconnect, we should handle any previous stuff that was redeemed
-	go func () {
+	go func() {
 		for {
 			select {
-			case r := <- pubsub.Redeems:
+			case r := <-pubsub.Redeems:
 				handleReward(r)
-			case <- closeOnRedeem:
+			case <-closeOnRedeem:
 				return
 			}
 		}

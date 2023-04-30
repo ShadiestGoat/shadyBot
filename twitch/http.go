@@ -68,8 +68,8 @@ func refreshToken() {
 	time.Sleep(2 * time.Second)
 	refreshing.Store(false)
 
-	go func ()  {
-		time.Sleep(time.Duration(userToken.ExpiresIn - 10) * time.Second)
+	go func() {
+		time.Sleep(time.Duration(userToken.ExpiresIn-10) * time.Second)
 		go refreshToken()
 	}()
 }
@@ -130,8 +130,8 @@ func initHTTP(s *discordgo.Session) {
 
 		userToken = authTMP
 
-		go func ()  {
-			time.Sleep(time.Duration(userToken.ExpiresIn - 10) * time.Second)
+		go func() {
+			time.Sleep(time.Duration(userToken.ExpiresIn-10) * time.Second)
 			go refreshToken()
 		}()
 
@@ -142,7 +142,7 @@ func initHTTP(s *discordgo.Session) {
 		if r.Body == nil {
 			return
 		}
-		
+
 		body, _ := io.ReadAll(r.Body)
 
 		log.Debug("Received live notif info: %s", string(body))

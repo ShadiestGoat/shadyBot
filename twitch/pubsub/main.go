@@ -114,7 +114,7 @@ func startReading() {
 				return
 			}
 		}
-		
+
 		v := &resp{}
 		log.ErrorIfErr(json.NewDecoder(msg).Decode(&v), "decoding pubsub")
 

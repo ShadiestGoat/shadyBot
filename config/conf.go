@@ -72,16 +72,15 @@ type donations struct {
 }
 
 type twitch struct {
-	ClientID     string `conf:"client_id,twitch module will not be loaded"`
-	ClientSecret string `conf:"client_secret,twitch module will not be loaded"`
-	AppName      string `conf:"app_name,twitch module will not be loaded"`
-	ChannelName  string `conf:"channel_name,twitch module will not be loaded"`
-	CustomSecret string `conf:"custom_secret,twitch module will not be loaded"`
-	Role         string `conf:"ping_role,no one will be pinged about a new twitch stream"`
+	ClientID             string `conf:"client_id,twitch module will not be loaded"`
+	ClientSecret         string `conf:"client_secret,twitch module will not be loaded"`
+	AppName              string `conf:"app_name,twitch module will not be loaded"`
+	ChannelName          string `conf:"channel_name,twitch module will not be loaded"`
+	CustomSecret         string `conf:"custom_secret,twitch module will not be loaded"`
+	Role                 string `conf:"ping_role,no one will be pinged about a new twitch stream"`
 	RewardTitleTwitchCmd string `conf:"reward_name_twitch_cmd,the custom twitch command module will not be loaded"`
-	CustomSO     map[string]string
-	OwnID        string
-
+	CustomSO             map[string]string
+	OwnID                string
 }
 
 type xp struct {

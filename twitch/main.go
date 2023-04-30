@@ -19,8 +19,8 @@ var (
 	userToken *OAuth2
 	appToken  *OAuth2
 
-	helixClient  *helix.Client
-	ircClient    *twitch.Client
+	helixClient *helix.Client
+	ircClient   *twitch.Client
 
 	BASE_URL string
 )
@@ -90,7 +90,7 @@ func init() {
 				RedirectURI:     BASE_URL,
 				ExtensionOpts:   helix.ExtensionOptions{},
 			})
-			
+
 			log.FatalIfErr(err, "creating helix client")
 
 			resp, err := helixClient.RequestAppAccessToken(scopes)
@@ -130,13 +130,13 @@ func init() {
 			go setupPubSub()
 
 			helixClient.SetUserAccessToken("")
-	
+
 			respSubs, err := helixClient.GetEventSubSubscriptions(&helix.EventSubSubscriptionsParams{
 				Type: helix.EventSubTypeStreamOnline,
 			})
-	
+
 			logError(err, &respSubs.ResponseCommon, "fetching eventsub subscriptions")
-	
+
 			newSub := &helix.EventSubSubscription{
 				Type:    helix.EventSubTypeStreamOnline,
 				Version: "1",
@@ -148,17 +148,17 @@ func init() {
 					Callback: BASE_URL + "/live",
 				},
 			}
-	
+
 			rmID := []string{}
-	
+
 			log.Debug("New: %#v", newSub)
 			log.Debug("Resp: %#v", respSubs.Data)
 
 			thereIsGood := false
-			
+
 			for _, d := range respSubs.Data.EventSubSubscriptions {
 				log.Debug("Old: %#v", d)
-								
+
 				if d.Type != newSub.Type {
 					continue
 				}
@@ -177,7 +177,7 @@ func init() {
 
 				thereIsGood = true
 			}
-	
+
 			if len(rmID) != 0 {
 				for _, id := range rmID {
 					resp, err := helixClient.RemoveEventSubSubscription(id)
@@ -188,7 +188,7 @@ func init() {
 
 			if !thereIsGood {
 				newSub.Transport.Secret = config.Twitch.CustomSecret
-		
+
 				respNewSub, err := helixClient.CreateEventSubSubscription(newSub)
 				logError(err, &respNewSub.ResponseCommon, "creating evensub subscription")
 				if err != nil || respNewSub.ErrorMessage != "" && respNewSub.ErrorMessage != "subscription already exists" {
@@ -201,9 +201,9 @@ func init() {
 			} else {
 				log.Debug("Using the old cb, since its still good")
 			}
-	
+
 			helixClient.SetUserAccessToken(userToken.AccessToken)
-	
+
 			log.Success("Twitch Live notifications ready!")
 		}()
 	}, &initializer.ModuleInfo{

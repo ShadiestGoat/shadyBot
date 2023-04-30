@@ -69,7 +69,7 @@ var baseCommands = map[string]*TwitchCommand{
 			soResp, err := helixClient.SendShoutout(&helix.SendShoutoutParams{
 				FromBroadcasterID: config.Twitch.OwnID,
 				ToBroadcasterID:   otherStreamer,
-				ModeratorID: config.Twitch.OwnID,
+				ModeratorID:       config.Twitch.OwnID,
 			})
 
 			logError(err, &soResp.ResponseCommon, "sending twitch so")
