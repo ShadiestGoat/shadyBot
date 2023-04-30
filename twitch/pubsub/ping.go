@@ -20,13 +20,6 @@ func init() {
 var pongDone = false
 var closePing = make(chan bool, 2)
 
-func init() {
-	for {
-		time.Sleep(4 * time.Minute)
-		doPing()
-	}
-}
-
 func startPing() {
 	if doingPing {
 		log.Warn("Doing ping x2!!!!")
