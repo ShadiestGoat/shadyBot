@@ -42,6 +42,7 @@ func refreshToken() {
 		return
 	}
 	refreshing.Store(true)
+	log.Debug("Refreshing token...")
 
 	// Just in case <3, to get rid of the slower connections
 	time.Sleep(5 * time.Second)
