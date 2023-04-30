@@ -8,6 +8,7 @@ var setup = [][2]string{
 	{sql_SETUP_WARN, "creating the warning table"},
 	{sql_SETUP_GAMBLER, "creating the gambler table"},
 	{sql_SETUP_TWITCH_COMMANDS, "creating the twitch command table"},
+	// {sql_SETUP_REMINDERS, "creating the remindme table"},
 }
 
 const sql_SETUP_XP = `CREATE TABLE IF NOT EXISTS xp (
@@ -70,3 +71,10 @@ const sql_SETUP_TWITCH_COMMANDS = `CREATE TABLE IF NOT EXISTS twitch_cmd (
 
 	UNIQUE(cmd, usr)
 )`
+
+// const sql_SETUP_REMINDERS = `CREATE TABLE IF NOT EXISTS reminders (
+// 	id TEXT PRIMARY KEY,
+// 	user_id TEXT,
+// 	when TIMESTAMPTZ,
+// 	text TEXT
+// )`
