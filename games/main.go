@@ -16,7 +16,7 @@ import (
 
 func init() {
 	closer := make(chan bool, 2)
-	
+
 	initializer.Register(initializer.MOD_GAMES, func(c *initializer.InitContext) {
 		disabled := map[string]bool{}
 
@@ -37,14 +37,14 @@ func init() {
 		if !disabled["coinflip"] {
 			cmdCoin()
 		}
-		
+
 		disabledAllGambling := disabled["slots"] && disabled["coinflip"] && disabled["blackjack"]
 
 		if !disabledAllGambling {
 			cmdGambler()
 			go ActivityStore.Loop(c.Discord, closer)
 		}
-		
+
 	}, nil, initializer.MOD_DISCORD)
 
 	initializer.RegisterCloser(initializer.MOD_GAMES, func() {

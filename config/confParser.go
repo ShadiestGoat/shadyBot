@@ -34,7 +34,7 @@ func load() {
 		"Donations": &Donations,
 		"Twitch":    &Twitch,
 		"XP":        &XP,
-		"Games": 	 &Games,
+		"Games":     &Games,
 	}
 
 	b1, _ := os.ReadFile("config.conf")

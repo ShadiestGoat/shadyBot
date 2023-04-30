@@ -94,7 +94,7 @@ func fetchOldRedemptions(after string) {
 	urlToUse := "https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions?" + v.Encode()
 
 	req, _ := http.NewRequest("GET", urlToUse, nil)
-	req.Header.Set("Authorization", "Bearer " + userToken.AccessToken)
+	req.Header.Set("Authorization", "Bearer "+userToken.AccessToken)
 	req.Header.Set("Client-Id", config.Twitch.ClientID)
 
 	resp, err := http.DefaultClient.Do(req)
@@ -144,7 +144,7 @@ func fetchOldRedemptions(after string) {
 
 func setupPubSub() {
 	resp, err := helixClient.GetCustomRewards(&helix.GetCustomRewardsParams{
-		BroadcasterID: config.Twitch.OwnID,
+		BroadcasterID:         config.Twitch.OwnID,
 		OnlyManageableRewards: true,
 	})
 	logError(err, &resp.ResponseCommon, "fetching custom rewards")

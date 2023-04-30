@@ -13,41 +13,41 @@ import (
 )
 
 const (
-	MOD_AUTO_ROLES     initutils.Module = "AUTO_ROLES"
-	MOD_ROLE_ASSIGN    initutils.Module = "ROLE_ASSIGN"
-	MOD_CONFIG         initutils.Module = "CONFIG"
-	MOD_DB             initutils.Module = "DB"
-	MOD_DISCORD        initutils.Module = "DISCORD"
-	MOD_DONATION       initutils.Module = "DONATION"
-	MOD_FINLAND        initutils.Module = "FINLAND"
-	MOD_GAMES          initutils.Module = "GAMES"
-	MOD_LOG            initutils.Module = "LOG"
-	MOD_POLLS          initutils.Module = "POLLS"
-	MOD_XP             initutils.Module = "XP"
-	MOD_MOD_LOG        initutils.Module = "MOD_LOG"
-	MOD_HELP_LOADER    initutils.Module = "HELP_LOADER"
-	MOD_HELP           initutils.Module = "HELP"
-	MOD_TWITCH         initutils.Module = "TWITCH"
-	MOD_TWITCH_LIVE    initutils.Module = "TWITCH_LIVE_NOTIFICATION"
+	MOD_AUTO_ROLES        initutils.Module = "AUTO_ROLES"
+	MOD_ROLE_ASSIGN       initutils.Module = "ROLE_ASSIGN"
+	MOD_CONFIG            initutils.Module = "CONFIG"
+	MOD_DB                initutils.Module = "DB"
+	MOD_DISCORD           initutils.Module = "DISCORD"
+	MOD_DONATION          initutils.Module = "DONATION"
+	MOD_FINLAND           initutils.Module = "FINLAND"
+	MOD_GAMES             initutils.Module = "GAMES"
+	MOD_LOG               initutils.Module = "LOG"
+	MOD_POLLS             initutils.Module = "POLLS"
+	MOD_XP                initutils.Module = "XP"
+	MOD_MOD_LOG           initutils.Module = "MOD_LOG"
+	MOD_HELP_LOADER       initutils.Module = "HELP_LOADER"
+	MOD_HELP              initutils.Module = "HELP"
+	MOD_TWITCH            initutils.Module = "TWITCH"
+	MOD_TWITCH_LIVE       initutils.Module = "TWITCH_LIVE_NOTIFICATION"
 	MOD_TWITCH_CUSTOM_CMD initutils.Module = "TWITCH_CUSTOM_CMD"
-	MOD_TWITCH_PERIODIC initutils.Module = "TWITCH_PERIODIC"
-	MOD_HTTP           initutils.Module = "HTTP"
-	MOD_XP_CMD         initutils.Module = "XP_CMD"
+	MOD_TWITCH_PERIODIC   initutils.Module = "TWITCH_PERIODIC"
+	MOD_HTTP              initutils.Module = "HTTP"
+	MOD_XP_CMD            initutils.Module = "XP_CMD"
 )
 
 var aliases = map[string][]initutils.Module{
-	"xp": {MOD_XP, MOD_XP_CMD},
-	"auto_roles": {MOD_AUTO_ROLES},
-	"toggle_roles": {MOD_ROLE_ASSIGN},
-	"donation": {MOD_DONATION},
-	"finland": {MOD_FINLAND}, 
-	"games": {MOD_GAMES},
-	"polls": {MOD_POLLS},
-	"mod_log": {MOD_MOD_LOG},
-	"help": {MOD_HELP_LOADER, MOD_HELP},
-	"twitch": {MOD_TWITCH, MOD_TWITCH_LIVE, MOD_TWITCH_CUSTOM_CMD},
-	"twitch_live": {MOD_TWITCH_LIVE},
-	"twitch_custom_cmd": {MOD_TWITCH_CUSTOM_CMD},
+	"xp":                    {MOD_XP, MOD_XP_CMD},
+	"auto_roles":            {MOD_AUTO_ROLES},
+	"toggle_roles":          {MOD_ROLE_ASSIGN},
+	"donation":              {MOD_DONATION},
+	"finland":               {MOD_FINLAND},
+	"games":                 {MOD_GAMES},
+	"polls":                 {MOD_POLLS},
+	"mod_log":               {MOD_MOD_LOG},
+	"help":                  {MOD_HELP_LOADER, MOD_HELP},
+	"twitch":                {MOD_TWITCH, MOD_TWITCH_LIVE, MOD_TWITCH_CUSTOM_CMD},
+	"twitch_live":           {MOD_TWITCH_LIVE},
+	"twitch_custom_cmd":     {MOD_TWITCH_CUSTOM_CMD},
 	"twitch_periodic_texts": {MOD_TWITCH_PERIODIC},
 }
 
