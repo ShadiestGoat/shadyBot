@@ -147,17 +147,26 @@ func setupPubSub() {
 	resp, err := helixClient.GetCustomRewards(&helix.GetCustomRewardsParams{
 		BroadcasterID: config.Twitch.OwnID,
 	})
-	log.FatalIfErr(err, "Fetching own custom rewards")
+	logError(err, &resp.ResponseCommon, "fetching custom rewards")
+	
+	allTitles := ""
 
 	for _, r := range resp.Data.ChannelCustomRewards {
+		allTitles += r.Title + "\n"
+
 		if r.Title == config.Twitch.RewardTitleTwitchCmd {
 			twitchCustomCmdID = r.ID
 			break
 		}
 	}
 
+	if len(allTitles) != 0 {
+		allTitles = allTitles[:len(allTitles)-1]
+	}
+
 	if twitchCustomCmdID == "" {
 		log.Warn("Couldn't find the twitch custom cmd reward, are you sure the title is correct?\n(PS: This means the pubsub & custom cmd stuff will not work!)")
+		log.Debug("Titles gotten:\n" + allTitles)
 		return
 	}
 
