@@ -15,6 +15,8 @@ import (
 	"github.com/shadiestgoat/shadyBot/twitch/pubsub"
 )
 
+const custom_cmd_title = "Custom Twitch Command"
+
 func updateChannelPoints(rewardID string, redemptionID string, s string) {
 	helixClient.UpdateChannelCustomRewardsRedemptionStatus(&helix.UpdateChannelCustomRewardsRedemptionStatusParams{
 		ID:            redemptionID,
@@ -91,7 +93,7 @@ func fetchOldRedemptions(after string) {
 
 	urlToUse := "https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions?" + v.Encode()
 	log.Debug(urlToUse)
-	
+
 	req, _ := http.NewRequest("GET", urlToUse, nil)
 	req.Header.Set("Authorization", "Bearer " + userToken.AccessToken)
 	req.Header.Set("Client-Id", config.Twitch.ClientID)
@@ -142,34 +144,41 @@ func fetchOldRedemptions(after string) {
 }
 
 func setupPubSub() {
-	if config.Twitch.RewardTitleTwitchCmd == "" {
-		return
-	}
-
 	resp, err := helixClient.GetCustomRewards(&helix.GetCustomRewardsParams{
 		BroadcasterID: config.Twitch.OwnID,
+		OnlyManageableRewards: true,
 	})
 	logError(err, &resp.ResponseCommon, "fetching custom rewards")
-	
-	allTitles := ""
-
 	for _, r := range resp.Data.ChannelCustomRewards {
-		allTitles += r.Title + "\n"
-
-		if r.Title == config.Twitch.RewardTitleTwitchCmd {
+		if r.Title == custom_cmd_title {
 			twitchCustomCmdID = r.ID
 			break
 		}
 	}
 
-	if len(allTitles) != 0 {
-		allTitles = allTitles[:len(allTitles)-1]
-	}
-
 	if twitchCustomCmdID == "" {
-		log.Warn("Couldn't find the twitch custom cmd reward, are you sure the title is correct?\n(PS: This means the pubsub & custom cmd stuff will not work!)")
-		log.Debug("Titles gotten:\n" + allTitles)
-		return
+		log.Debug("Creating the custom command custom reward thingy")
+		resp, err := helixClient.CreateCustomReward(&helix.ChannelCustomRewardsParams{
+			BroadcasterID:                     config.Twitch.OwnID,
+			Title:                             "Custom Twitch Command",
+			Prompt:                            "Add a command specifically made for you. Format is \"command: what to respond with\"",
+			Cost:                              4_000,
+			IsEnabled:                         true,
+			BackgroundColor:                   "#0d1117",
+			IsUserInputRequired:               true,
+			IsMaxPerStreamEnabled:             false,
+			IsMaxPerUserPerStreamEnabled:      false,
+			IsGlobalCooldownEnabled:           false,
+			ShouldRedemptionsSkipRequestQueue: true,
+		})
+
+		if logError(err, &resp.ResponseCommon, "creating custom cmd") {
+			return
+		}
+
+		twitchCustomCmdID = resp.Data.ChannelCustomRewards[0].ID
+	} else {
+		log.Debug("Using old custom reward for twitch custom command <3")
 	}
 
 	// Basically, whenever we reconnect, we should handle any previous stuff that was redeemed
