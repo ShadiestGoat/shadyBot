@@ -151,14 +151,9 @@ func init() {
 
 			rmID := []string{}
 
-			log.Debug("New: %#v", newSub)
-			log.Debug("Resp: %#v", respSubs.Data)
-
 			thereIsGood := false
 
 			for _, d := range respSubs.Data.EventSubSubscriptions {
-				log.Debug("Old: %#v", d)
-
 				if d.Type != newSub.Type {
 					continue
 				}
@@ -198,6 +193,7 @@ func init() {
 					}
 					log.Fatal("While creating an event sub for type '%s': %v %s", helix.EventSubTypeStreamOnline, err, msg)
 				}
+				log.Debug("Added new cb for live notification")
 			} else {
 				log.Debug("Using the old cb, since its still good")
 			}
