@@ -139,7 +139,7 @@ func initHTTP(s *discordgo.Session) {
 		go autoRefreshGoroutine()
 
 		log.Success("Twitch Authed!")
-		w.Write([]byte(`Your'e so fucking hot`))
+		w.Write([]byte(`You're so hot <3`))
 	})
 
 	r.HandleFunc(`/live`, func(w http.ResponseWriter, r *http.Request) {
