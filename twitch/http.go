@@ -37,6 +37,11 @@ type OAuth2 struct {
 
 var refreshing = atomic.Bool{}
 
+func autoRefreshGoroutine() {
+	time.Sleep(time.Duration(userToken.ExpiresIn-5) * time.Second)
+	go refreshToken("auto-refresh")
+}
+
 func refreshToken(caller string) {
 	if refreshing.Load() {
 		return
@@ -70,10 +75,7 @@ func refreshToken(caller string) {
 	time.Sleep(2 * time.Second)
 	refreshing.Store(false)
 
-	go func() {
-		time.Sleep(time.Duration(userToken.ExpiresIn-5) * time.Second)
-		go refreshToken("auto-refresh")
-	}()
+	go autoRefreshGoroutine()
 }
 
 type eventSubNotification struct {
@@ -132,11 +134,8 @@ func initHTTP(s *discordgo.Session) {
 
 		userToken = authTMP
 
-		go func() {
-			time.Sleep(time.Duration(userToken.ExpiresIn-5) * time.Second)
-			go refreshToken("auto-refresh")
-		}()
-
+		go autoRefreshGoroutine()
+		
 		log.Success("Twitch Authed!")
 		w.Write([]byte(`Your'e so fucking hot`))
 	})
