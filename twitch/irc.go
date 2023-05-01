@@ -127,7 +127,7 @@ func refreshIRC() {
 		log.ErrorIfErr(err, "running irc client")
 	}
 
-	go refreshToken()
+	go refreshToken("irc")
 }
 
 func setupIRC() {

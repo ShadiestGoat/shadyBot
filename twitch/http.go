@@ -37,15 +37,15 @@ type OAuth2 struct {
 
 var refreshing = atomic.Bool{}
 
-func refreshToken() {
+func refreshToken(caller string) {
 	if refreshing.Load() {
 		return
 	}
 	refreshing.Store(true)
-	log.Debug("Refreshing token...")
+	log.Debug("Refreshing token... (%s)", caller)
 
 	// Just in case <3, to get rid of the slower connections
-	time.Sleep(5 * time.Second)
+	time.Sleep(10 * time.Second)
 
 	if userToken == nil || helixClient == nil {
 		return
@@ -70,8 +70,8 @@ func refreshToken() {
 	refreshing.Store(false)
 
 	go func() {
-		time.Sleep(time.Duration(userToken.ExpiresIn-10) * time.Second)
-		go refreshToken()
+		time.Sleep(time.Duration(userToken.ExpiresIn-5) * time.Second)
+		go refreshToken("auto-refresh")
 	}()
 }
 
@@ -132,8 +132,8 @@ func initHTTP(s *discordgo.Session) {
 		userToken = authTMP
 
 		go func() {
-			time.Sleep(time.Duration(userToken.ExpiresIn-10) * time.Second)
-			go refreshToken()
+			time.Sleep(time.Duration(userToken.ExpiresIn-5) * time.Second)
+			go refreshToken("auto-refresh")
 		}()
 
 		log.Success("Twitch Authed!")
