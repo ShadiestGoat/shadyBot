@@ -41,6 +41,7 @@ func refreshToken(caller string) {
 	if refreshing.Load() {
 		return
 	}
+
 	refreshing.Store(true)
 	log.Debug("Refreshing token... (%s)", caller)
 
@@ -137,6 +138,7 @@ func initHTTP(s *discordgo.Session) {
 		}()
 
 		log.Success("Twitch Authed!")
+		w.Write([]byte(`Your'e so fucking hot`))
 	})
 
 	r.HandleFunc(`/live`, func(w http.ResponseWriter, r *http.Request) {
