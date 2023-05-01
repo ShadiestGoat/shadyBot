@@ -38,6 +38,7 @@ type OAuth2 struct {
 var refreshing = atomic.Bool{}
 
 func autoRefreshGoroutine() {
+	log.Debug("Auto-refresh goroutine started")
 	time.Sleep(time.Duration(userToken.ExpiresIn-5) * time.Second)
 	go refreshToken("auto-refresh")
 }
@@ -65,6 +66,7 @@ func refreshToken(caller string) {
 	*userToken = OAuth2{
 		AccessToken:  resp.Data.AccessToken,
 		RefreshToken: resp.Data.RefreshToken,
+		ExpiresIn:    resp.Data.ExpiresIn,
 	}
 
 	helixClient.SetUserAccessToken(userToken.AccessToken)
@@ -135,7 +137,7 @@ func initHTTP(s *discordgo.Session) {
 		userToken = authTMP
 
 		go autoRefreshGoroutine()
-		
+
 		log.Success("Twitch Authed!")
 		w.Write([]byte(`Your'e so fucking hot`))
 	})
