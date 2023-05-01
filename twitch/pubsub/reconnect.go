@@ -3,6 +3,7 @@ package pubsub
 import (
 	"math"
 	"math/rand"
+	"sync/atomic"
 	"time"
 
 	"github.com/shadiestgoat/log"
@@ -12,9 +13,16 @@ var failAmt = 0
 
 var OnConnect = make(chan bool, 5)
 
+var connectionLock = atomic.Bool{}
+
 // (re)Connect
 // Should always be called as a go routine!
 func Connect() {
+	if connectionLock.Load() {
+		return
+	}
+	connectionLock.Store(true)
+
 	Close()
 
 	// Always sleep, even if its for like 10 seconds
@@ -43,4 +51,6 @@ func Connect() {
 	}
 
 	OnConnect <- true
+
+	connectionLock.Store(false)
 }
