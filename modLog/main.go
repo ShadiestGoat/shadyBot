@@ -102,7 +102,7 @@ func init() {
 			emb.Fields = []*discordgo.MessageEmbedField{
 				{
 					Name:   "Message Author",
-					Value:  "<@" + e.Author.ID + ">",
+					Value:  "<@" + e.BeforeDelete.Author.ID + ">",
 					Inline: true,
 				},
 				{
