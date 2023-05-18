@@ -45,7 +45,7 @@ func init() {
 	initializer.RegisterPriority(initializer.MOD_LOG, func(c *initializer.InitContext) {
 		logCBs := []log.LogCB{
 			log.NewLoggerPrint(),
-			log.NewLoggerFile("logs/log"),
+			log.NewLoggerFileComplex("logs/log", log.FILE_DESCENDING, 5),
 		}
 
 		if debugV.WebHook != "" {
@@ -55,6 +55,7 @@ func init() {
 
 			logCBs = append(logCBs, log.NewLoggerDiscordWebhook(debugV.Mention, debugV.WebHook))
 		}
+
 		log.Init(logCBs...)
 	}, nil, initializer.MOD_CONFIG)
 

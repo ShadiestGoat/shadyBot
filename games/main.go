@@ -44,7 +44,6 @@ func init() {
 			cmdGambler()
 			go ActivityStore.Loop(c.Discord, closer)
 		}
-
 	}, nil, initializer.MOD_DISCORD)
 
 	initializer.RegisterCloser(initializer.MOD_GAMES, func() {
