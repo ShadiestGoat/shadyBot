@@ -21,6 +21,7 @@ const (
 	MOD_DONATION          initutils.Module = "DONATION"
 	MOD_FINLAND           initutils.Module = "FINLAND"
 	MOD_GAMES             initutils.Module = "GAMES"
+	MOD_GAMBLER           initutils.Module = "GAMBLER"
 	MOD_LOG               initutils.Module = "LOG"
 	MOD_POLLS             initutils.Module = "POLLS"
 	MOD_XP                initutils.Module = "XP"

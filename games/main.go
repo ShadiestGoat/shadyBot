@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/shadiestgoat/initutils"
 	"github.com/shadiestgoat/log"
 	"github.com/shadiestgoat/shadyBot/config"
 	"github.com/shadiestgoat/shadyBot/db"
@@ -17,6 +18,8 @@ import (
 
 func init() {
 	closer := make(chan bool, 2)
+
+	disabledAllGambling := false
 
 	initializer.Register(initializer.MOD_GAMES, func(c *initializer.InitContext) {
 		disabled := map[string]bool{}
@@ -45,8 +48,14 @@ func init() {
 			log.Debug("Added coinflip...")
 		}
 
-		disabledAllGambling := disabled["slots"] && disabled["coinflip"] && disabled["blackjack"]
-
+		disabledAllGambling = disabled["slots"] && disabled["coinflip"] && disabled["blackjack"]
+	}, &initializer.ModuleInfo{
+		PreHooks: []initutils.Module{
+			initializer.MOD_DISCORD,
+		},
+	})
+	
+	initializer.Register(initializer.MOD_GAMBLER, func(c *initializer.InitContext) {
 		if !disabledAllGambling {
 			cmdGambler()
 			go ActivityStore.Loop(c.Discord, closer)
