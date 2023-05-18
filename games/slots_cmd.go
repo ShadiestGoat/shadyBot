@@ -68,9 +68,9 @@ func cmdSlots() {
 
 		cols := [3][]rune{slots(), slots(), slots()}
 		shiftsLeft := [3]int{
-			utils.RandInt(5, 17),
-			utils.RandInt(5, 17),
-			utils.RandInt(5, 17),
+			utils.RandInt(5, 14),
+			utils.RandInt(5, 14),
+			utils.RandInt(5, 14),
 		}
 
 		maxV := 0
@@ -104,7 +104,7 @@ func cmdSlots() {
 				Content: &content,
 			}, discutils.I_EDIT)
 
-			time.Sleep(130 * time.Millisecond)
+			time.Sleep(175 * time.Millisecond)
 		}
 
 		emb, total := embedSlotsWithRewards(lines, cols)
@@ -225,7 +225,7 @@ func embedSlotsWithRewards(lines int, cols [3][]rune) (*discordgo.MessageEmbed, 
 				cols[2][0],
 			}
 		}
-		
+
 		rewards[i] = slotsRewards(rawCols)
 	}
 
