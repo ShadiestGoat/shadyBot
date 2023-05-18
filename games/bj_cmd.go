@@ -169,7 +169,7 @@ func cmdBlackjack() {
 			}
 		}
 
-		if gotDraw || msgToSend == "" {
+		if gotDraw {
 			FinishGame(game.UserID, 0, false, GT_BJ)
 			emb := discutils.BaseEmbed
 			emb.Title = TITLE_BJ
