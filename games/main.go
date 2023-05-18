@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/shadiestgoat/log"
 	"github.com/shadiestgoat/shadyBot/config"
 	"github.com/shadiestgoat/shadyBot/db"
 	"github.com/shadiestgoat/shadyBot/discord"
@@ -26,16 +27,22 @@ func init() {
 
 		if !disabled["connect4"] {
 			connect4.Init()
+			log.Debug("Added connect4...")
 		}
 
 		if !disabled["blackjack"] {
 			cmdBlackjack()
+			log.Debug("Added blackjack...")
 		}
+
 		if !disabled["slots"] {
 			cmdSlots()
+			log.Debug("Added slots...")
 		}
+		
 		if !disabled["coinflip"] {
 			cmdCoin()
+			log.Debug("Added coinflip...")
 		}
 
 		disabledAllGambling := disabled["slots"] && disabled["coinflip"] && disabled["blackjack"]
@@ -43,6 +50,7 @@ func init() {
 		if !disabledAllGambling {
 			cmdGambler()
 			go ActivityStore.Loop(c.Discord, closer)
+			log.Debug("Added gambler commands")
 		}
 	}, nil, initializer.MOD_DISCORD)
 
