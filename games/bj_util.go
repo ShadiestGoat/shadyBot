@@ -171,9 +171,13 @@ func bjParseHand(inp string) BJHand {
 type bjDealerState int
 
 const (
+	// game end: dealer busted
 	bjd_bust bjDealerState = iota
+	// game end: draw
 	bjd_draw
+	// continue game
 	bjd_continue
+	// game end: you hand > dealr
 	bjd_lost
 )
 
@@ -189,7 +193,7 @@ func (g BJGame) dealerLoopState() bjDealerState {
 		return bjd_draw
 	}
 
-	if dealerTots[0] <= userTots[0] && dealerTots[len(dealerTots)-1] < 17 {
+	if dealerTots[len(dealerTots)-1] < 17 || dealerTots[0] <= userTots[0] {
 		return bjd_continue
 	}
 
