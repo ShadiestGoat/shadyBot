@@ -166,6 +166,12 @@ func cmdBlackjack() {
 			case bjd_lost:
 				won = true
 				msgToSend = "Your hand is greater than the dealer's"
+			case bjd_won:
+				won = false
+				msgToSend = "The dealer's hand is greater than yours"
+				if game.DealerHand.Totals(true)[0] == 21 {
+					msgToSend = "**The dealer** got the *femboy BJ*"
+				}
 			}
 		}
 

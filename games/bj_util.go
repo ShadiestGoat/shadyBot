@@ -179,6 +179,8 @@ const (
 	bjd_continue
 	// game end: you hand > dealr
 	bjd_lost
+	// game end: dealer won
+	bjd_won
 )
 
 func (g BJGame) dealerLoopState() bjDealerState {
@@ -195,6 +197,10 @@ func (g BJGame) dealerLoopState() bjDealerState {
 
 	if dealerTots[len(dealerTots)-1] < 17 || dealerTots[0] <= userTots[0] {
 		return bjd_continue
+	}
+
+	if dealerTots[0] > userTots[0] {
+		return bjd_won
 	}
 
 	return bjd_lost
