@@ -157,6 +157,8 @@ github.com/shadiestgoat/log v1.0.3 h1:ozpBJEk/2znB4A8KNqZ2ztuRiCFaTAXX9Z0tn7D3Tj
 github.com/shadiestgoat/log v1.0.3/go.mod h1:U9gLUA8fgyXMcwFD8UK2X3d1UcNyx4FTNbM+0lj0HNw=
 github.com/shadiestgoat/log v1.1.0 h1:85mt4Jg8Qsn9L3i5Oa9v8YaagFWGfgl6wBvgv6iHKjY=
 github.com/shadiestgoat/log v1.1.0/go.mod h1:U9gLUA8fgyXMcwFD8UK2X3d1UcNyx4FTNbM+0lj0HNw=
+github.com/shadiestgoat/log v1.1.1 h1:YCGymVN2E6r5TLFeUSrHr15EnBGRre2BOMSnwj4JyV0=
+github.com/shadiestgoat/log v1.1.1/go.mod h1:U9gLUA8fgyXMcwFD8UK2X3d1UcNyx4FTNbM+0lj0HNw=
 github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24/go.mod h1:M+9NzErvs504Cn4c5DxATwIqPbtswREoFCre64PpcG4=
 github.com/shopspring/decimal v1.2.0 h1:abSATXmQEYyShuxI4/vyW3tV1MrKAJzCZ/0zLUXYbsQ=
 github.com/shopspring/decimal v1.2.0/go.mod h1:DKyhrW/HYNuLGql+MJL6WCR6knT2jwCFRcu2hWCYk4o=

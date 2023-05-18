@@ -9,7 +9,7 @@ require (
 )
 
 require (
-	github.com/shadiestgoat/log v1.1.0
+	github.com/shadiestgoat/log v1.1.1
 	nhooyr.io/websocket v1.8.7
 )
 
