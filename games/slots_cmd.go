@@ -193,26 +193,39 @@ func embedSlotsWithRewards(lines int, cols [3][]rune) (*discordgo.MessageEmbed, 
 	for i := 0; i < lines; i++ {
 		var rawCols [3]rune
 
-		if i < 3 {
+		switch i {
+		case 0:
 			rawCols = [3]rune{
-				cols[0][i],
-				cols[1][i],
-				cols[2][i],
+				cols[0][1],
+				cols[1][1],
+				cols[2][1],
 			}
-		} else if i == 3 {
+		case 1:
+			rawCols = [3]rune{
+				cols[0][0],
+				cols[1][0],
+				cols[2][0],
+			}
+		case 2:
+			rawCols = [3]rune{
+				cols[0][2],
+				cols[1][2],
+				cols[2][2],
+			}
+		case 3:
 			rawCols = [3]rune{
 				cols[0][0],
 				cols[1][1],
 				cols[2][2],
 			}
-		} else {
+		case 4:
 			rawCols = [3]rune{
 				cols[0][2],
 				cols[1][1],
 				cols[2][0],
 			}
 		}
-
+		
 		rewards[i] = slotsRewards(rawCols)
 	}
 
