@@ -5,6 +5,10 @@ func GreatestCommonDivisor(a, b int) int {
 	if b > a {
 		a, b = b, a
 	}
+	
+	if b == 0 {
+		return 1
+	}
 
 	r := a % b
 	if r == 0 {
