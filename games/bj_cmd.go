@@ -165,12 +165,12 @@ func cmdBlackjack() {
 				gotDraw = true
 			case bjd_lost:
 				won = true
-				msgToSend = "Your hand is greater than the dealer's"
+				msgToSend = "Your hand is greater than The Dealer's"
 			case bjd_won:
 				won = false
-				msgToSend = "The dealer's hand is greater than yours"
+				msgToSend = "The Dealer's hand is greater than yours"
 				if game.DealerHand.Totals(true)[0] == 21 {
-					msgToSend = "**The dealer** got the *femboy BJ*"
+					msgToSend = "**The Dealer** got the *femboy BJ*"
 				}
 			}
 		}
@@ -179,7 +179,7 @@ func cmdBlackjack() {
 			FinishGame(game.UserID, 0, false, GT_BJ)
 			emb := discutils.BaseEmbed
 			emb.Title = TITLE_BJ
-			emb.Description = "The dealer's hand is **equal** to yours! This means you **neither won nor lost** any xp." + game.handString()
+			emb.Description = "The Dealer's hand is **equal** to yours! This means you **neither won nor lost** any xp." + game.handString()
 
 			discutils.IEmbed(s, i.Interaction, &emb, responded)
 		} else if msgToSend != "" {
