@@ -195,12 +195,14 @@ func (g BJGame) dealerLoopState() bjDealerState {
 		return bjd_draw
 	}
 
-	if dealerTots[len(dealerTots)-1] < 17 || dealerTots[0] <= userTots[0] {
-		return bjd_continue
+	for _, t := range dealerTots {
+		if t > userTots[0] && t > 17 {
+			return bjd_won
+		}
 	}
 
-	if dealerTots[0] > userTots[0] {
-		return bjd_won
+	if dealerTots[len(dealerTots)-1] < 17 {
+		return bjd_continue
 	}
 
 	return bjd_lost
