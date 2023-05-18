@@ -215,8 +215,10 @@ func (g BJGame) embedBase(desc string, won bool) *discordgo.MessageEmbed {
 
 	if won {
 		desc += "won"
+		emb.Color = discutils.COLOR_SUCCESS
 	} else {
 		desc += "lost"
+		emb.Color = discutils.COLOR_DANGER
 	}
 
 	desc += "** this xp." + g.handString()
