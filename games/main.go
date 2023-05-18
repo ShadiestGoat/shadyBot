@@ -6,6 +6,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/shadiestgoat/initutils"
+	"github.com/shadiestgoat/log"
 	"github.com/shadiestgoat/shadyBot/config"
 	"github.com/shadiestgoat/shadyBot/db"
 	"github.com/shadiestgoat/shadyBot/discord"
@@ -105,8 +106,8 @@ func cmdGambler() {
 
 		for rows.Next() {
 			gt, won, lost := GT_BJ, 0, 0
-			err = rows.Scan(&gt, won, lost)
-			if err != nil {
+			err = rows.Scan(&gt, &won, &lost)
+			if log.ErrorIfErr(err, "scanning a gambler fetch") {
 				discutils.IError(s, i.Interaction, "Couldn't fetch your stats!")
 				return
 			}
