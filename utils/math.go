@@ -2,18 +2,15 @@ package utils
 
 // Returns the greatest common divisor between a & b.
 func GreatestCommonDivisor(a, b int) int {
+	// condition: b <= a
+
 	if b > a {
 		a, b = b, a
 	}
-	
-	if b == 0 {
-		return 1
+
+	for b != 0 {
+		a, b = b, a%b
 	}
 
-	r := a % b
-	if r == 0 {
-		return b
-	}
-
-	return GreatestCommonDivisor(b, r)
+	return a
 }
