@@ -52,7 +52,7 @@ type general struct {
 	DB       string                   `conf:"db_uri,,required"`
 	Port     string                   `conf:"port"`
 	Domain   string                   `conf:"domain,twitch,twitch module will not be loaded"`
-	Disabled caseInsensitiveInclusion `conf:"disabled"`
+	Disabled caseInsensitiveInclusion `conf:"disable"`
 }
 
 type discord struct {
