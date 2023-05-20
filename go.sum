@@ -153,6 +153,8 @@ github.com/shadiestgoat/donation-api-wrapper v1.1.0 h1:UPzjiah//QRKgkotKZZMftzGO
 github.com/shadiestgoat/donation-api-wrapper v1.1.0/go.mod h1:LH8rHYqAJibTgAOE+Mie9z3iUO4pid00WhKX8hU9pSw=
 github.com/shadiestgoat/initutils v1.1.1 h1:clsyRBJgJq4uYKuq6KP1Wt6eu92Q12Pcd8q+/svNXj4=
 github.com/shadiestgoat/initutils v1.1.1/go.mod h1:y1gY9UmY3zj4TUksg2GHqXvQT6KjOCI4tNSjR0GPgrs=
+github.com/shadiestgoat/initutils v1.2.0 h1:qvs+5B0ENIx1qbOSlbBSI2OklaYjoHeWeTjzDNi/21c=
+github.com/shadiestgoat/initutils v1.2.0/go.mod h1:y1gY9UmY3zj4TUksg2GHqXvQT6KjOCI4tNSjR0GPgrs=
 github.com/shadiestgoat/log v1.0.3 h1:ozpBJEk/2znB4A8KNqZ2ztuRiCFaTAXX9Z0tn7D3Tjw=
 github.com/shadiestgoat/log v1.0.3/go.mod h1:U9gLUA8fgyXMcwFD8UK2X3d1UcNyx4FTNbM+0lj0HNw=
 github.com/shadiestgoat/log v1.1.0 h1:85mt4Jg8Qsn9L3i5Oa9v8YaagFWGfgl6wBvgv6iHKjY=

@@ -5,23 +5,31 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/shadiestgoat/log"
-	"github.com/shadiestgoat/shadyBot/utils"
 )
 
-var consequenceSuffix = []string{
-	" <3",
-	"!",
-	" :(",
-}
+type caseInsensitiveInclusion map[string]bool
 
 func panicLoad(key, section, err string) {
-	panic("While setting a value for '" + section + "." + key + "': " + err + "!")
+	panic("While setting a value for " + keyFormat(section, key) + ": " + err + "!")
 }
 
 type Parsable interface {
 	Parse(inp string) error
+}
+
+func keyFormat(sec, key string) string {
+	return "[" + sec + "].[" + key + "]"
+}
+
+func normMod(mod string) string {
+	if mod == "" {
+		return "GENERAL"
+	}
+
+	return strings.ToUpper(mod)
 }
 
 func load() {
@@ -120,6 +128,32 @@ func load() {
 		}
 	}
 
+	moduleWarnedKeys := map[string]map[string][]string{}
+	moduleRequiredKeys := map[string][]string{}
+
+	addToWarnings := func (mod, sec, key, consequence string) {
+		mod = normMod(mod)
+		
+		if moduleWarnedKeys[mod] == nil {
+			moduleWarnedKeys[mod] = map[string][]string{}
+		}
+
+		if moduleWarnedKeys[mod][consequence] == nil {
+			moduleWarnedKeys[mod][consequence] = []string{}
+		}
+
+		moduleWarnedKeys[mod][consequence] = append(moduleWarnedKeys[mod][consequence], keyFormat(sec, key))
+	}
+
+	addToRequired := func (mod, sec, key string) {
+		mod = normMod(mod)
+		if moduleRequiredKeys[mod] == nil {
+			moduleRequiredKeys[mod] = []string{}
+		}
+
+		moduleRequiredKeys[mod] = append(moduleRequiredKeys[mod], keyFormat(sec, key))
+	}
+
 	for sec, p := range secMap {
 		t := reflect.TypeOf(p)
 		if t.Kind() == reflect.Pointer {
@@ -141,16 +175,38 @@ func load() {
 				continue
 			}
 
-			spl := strings.SplitN(tagV, ",", 2)
-			key := spl[0]
+			spl := strings.SplitN(tagV, ",", 4)
+			
+			var (
+				key = spl[0]
+				isRequired = false
+				module = ""
+				consequence = ""
+			)
+
+			if len(spl) >= 2 {
+				module = spl[1]
+
+				if len(spl) == 4 {
+					isRequired = spl[2] == "required"
+					consequence = spl[3]
+				} else if len(spl) == 3 {
+					if spl[2] == "required" {
+						isRequired = true
+					} else if spl[2] != "" {
+						consequence = spl[2]
+					}
+				}
+			}
+
 			givenVal := conf[key]
 
 			if givenVal == "" {
 				if len(spl) == 2 {
-					if spl[1] == "required" {
-						panic(sec + "." + key + " is required! For more info look at the example conf!")
-					} else {
-						log.Warn("Value '%s' under section '%s' is not set, so %s%s", key, sec, spl[1], consequenceSuffix[utils.RandInt(0, len(consequenceSuffix)-1)])
+					if isRequired {
+						addToRequired(module, sec, key)
+					} else if consequence != "" {
+						addToWarnings(module, sec, key, consequence)
 					}
 				}
 			} else {
@@ -199,6 +255,26 @@ func load() {
 					}
 
 					vToSet = vs
+				case map[string]bool:
+					tmpM := map[string]bool{}
+
+					spl := strings.Split(givenVal, " ")
+					
+					for _, s := range spl {
+						tmpM[s] = true
+					}
+
+					vToSet = tmpM
+				case caseInsensitiveInclusion:
+					tmpM := map[string]bool{}
+
+					spl := strings.Split(givenVal, " ")
+					
+					for _, s := range spl {
+						tmpM[strings.ToLower(s)] = true
+					}
+
+					vToSet = tmpM
 				default:
 					if vI, ok := vI.(Parsable); ok {
 						err := vI.Parse(givenVal)
@@ -216,5 +292,54 @@ func load() {
 				}
 			}
 		}
+	}
+
+	for v := range General.Disabled {
+		v = strings.ToLower(v)
+
+		delete(moduleRequiredKeys, v)
+		delete(moduleWarnedKeys,   v)
+	}
+
+	if len(moduleRequiredKeys) != 0 {
+		// we will not being any further than this module, so its ok to init the log right now!
+		initLog()
+	}
+
+	for m, consequenceMap := range moduleWarnedKeys {
+		for con, keys := range consequenceMap {
+			if con == "" || len(keys) == 0 {
+				continue
+			}
+
+			if len(keys) == 1 {
+				log.Warn("%s: Due to %s not being set, %s", m, keys[0], con)
+			} else {
+				keysStr := "- " + strings.Join(keys, "\n- ")
+				
+				log.Warn("%s: Due to the following keys not being set, %s:\n%s", m, con, keysStr)
+			}
+		}
+	}
+
+	if len(moduleWarnedKeys) != 0 {
+		log.PrintDebug("To avoid the above warnings, either set those keys or disable the associated module using the DISABLE config key")
+		log.PrintDebug("For more info, read the config.template.conf file!")
+	}
+
+	time.Sleep(150 * time.Millisecond)
+
+	if len(moduleRequiredKeys) != 0 {
+		str := "There are required keys that are not set! To fix this, either set these keys or disable the modules associated with them!"
+
+		for m, keys := range moduleRequiredKeys {
+			str += "\n" + m + ":"
+
+			for _, k := range keys {
+				str += "\n- " + k
+			}
+		}
+
+		log.Fatal(str)
 	}
 }

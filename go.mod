@@ -40,6 +40,6 @@ require (
 	github.com/jackc/pgx/v4 v4.18.1
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.18 // indirect
-	github.com/shadiestgoat/initutils v1.1.1
+	github.com/shadiestgoat/initutils v1.2.0
 	golang.org/x/sys v0.8.0 // indirect
 )

@@ -36,25 +36,44 @@ const (
 	MOD_XP_CMD            initutils.Module = "XP_CMD"
 )
 
+// These are the modules that are used by the 'DISABLE' key
+const (
+	DMOD_XP = "xp"
+	DMOD_AUTO_ROLES = "auto_roles"
+	DMOD_TOGGLE_ROLES = "toggle_roles"
+	DMOD_DONATION = "donations"
+	DMOD_FINLAND = "finland"
+	DMOD_GAMES = "games"
+	DMOD_POLLS = "polls"
+	DMOD_MOD_LOG = "mod_log"
+	DMOD_HELP = "help"
+	DMOD_TWITCH = "twitch"
+	DMOD_TWITCH_LIVE = "twitch_live"
+	DMOD_TWITCH_CUSTOM_MOD = "twitch_custom_cmd"
+	DMOD_TWITCH_PERIODIC_TEXTS = "twitch_periodic_texts"
+)
+
 var aliases = map[string][]initutils.Module{
-	"xp":                    {MOD_XP, MOD_XP_CMD},
-	"auto_roles":            {MOD_AUTO_ROLES},
-	"toggle_roles":          {MOD_ROLE_ASSIGN},
-	"donation":              {MOD_DONATION},
-	"finland":               {MOD_FINLAND},
-	"games":                 {MOD_GAMES},
-	"polls":                 {MOD_POLLS},
-	"mod_log":               {MOD_MOD_LOG},
-	"help":                  {MOD_HELP_LOADER, MOD_HELP},
-	"twitch":                {MOD_TWITCH, MOD_TWITCH_LIVE, MOD_TWITCH_CUSTOM_CMD},
-	"twitch_live":           {MOD_TWITCH_LIVE},
-	"twitch_custom_cmd":     {MOD_TWITCH_CUSTOM_CMD},
-	"twitch_periodic_texts": {MOD_TWITCH_PERIODIC},
+	DMOD_XP:                    {MOD_XP, MOD_XP_CMD},
+	DMOD_AUTO_ROLES:            {MOD_AUTO_ROLES},
+	DMOD_TOGGLE_ROLES:          {MOD_ROLE_ASSIGN},
+	DMOD_DONATION:              {MOD_DONATION},
+	DMOD_FINLAND:               {MOD_FINLAND},
+	DMOD_GAMES:                 {MOD_GAMES, MOD_GAMBLER},
+	DMOD_POLLS:                 {MOD_POLLS},
+	DMOD_MOD_LOG:               {MOD_MOD_LOG},
+	DMOD_HELP:                  {MOD_HELP_LOADER, MOD_HELP},
+	DMOD_TWITCH:                {MOD_TWITCH, MOD_TWITCH_LIVE, MOD_TWITCH_CUSTOM_CMD},
+	DMOD_TWITCH_LIVE:           {MOD_TWITCH_LIVE},
+	DMOD_TWITCH_CUSTOM_MOD:     {MOD_TWITCH_CUSTOM_CMD},
+	DMOD_TWITCH_PERIODIC_TEXTS: {MOD_TWITCH_PERIODIC},
 }
 
 type InitContext struct {
 	Discord  *discordgo.Session
 	Donation *donations.Client
+
+	DisabledModules map[string]bool
 }
 
 var ctx = &InitContext{}
@@ -116,6 +135,17 @@ func Init() {
 	err := priorityInit.Init()
 	if err != nil {
 		panic(err)
+	}
+
+	for dmod := range ctx.DisabledModules {
+		modsToDisable := aliases[dmod]
+		if modsToDisable == nil {
+			continue
+		}
+
+		for _, m := range modsToDisable {
+			normalInit.Unregister(m)
+		}
 	}
 
 	plan, err := normalInit.Plan()

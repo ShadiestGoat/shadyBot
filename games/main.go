@@ -2,7 +2,6 @@ package games
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/shadiestgoat/initutils"
@@ -22,11 +21,7 @@ func init() {
 	disabledAllGambling := false
 
 	initializer.Register(initializer.MOD_GAMES, func(c *initializer.InitContext) {
-		disabled := map[string]bool{}
-
-		for _, d := range config.Games.Disable {
-			disabled[strings.ToLower(d)] = true
-		}
+		disabled := config.Games.Disable
 
 		if !disabled["connect4"] {
 			connect4.Init()

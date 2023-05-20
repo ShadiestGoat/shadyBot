@@ -40,24 +40,30 @@ func init() {
 		}
 
 		Twitch.ChannelName = strings.ToLower(Twitch.ChannelName)
+		
+		c.DisabledModules = General.Disabled
 	}, nil)
 
 	initializer.RegisterPriority(initializer.MOD_LOG, func(c *initializer.InitContext) {
-		logCBs := []log.LogCB{
-			log.NewLoggerPrint(),
-			log.NewLoggerFileComplex("logs/log", log.FILE_DESCENDING, 5),
-		}
-
-		if debugV.WebHook != "" {
-			if debugV.Mention != "" {
-				debugV.Mention += ", "
-			}
-
-			logCBs = append(logCBs, log.NewLoggerDiscordWebhook(debugV.Mention, debugV.WebHook))
-		}
-
-		log.Init(logCBs...)
+		initLog()
 	}, nil, initializer.MOD_CONFIG)
 
 	initializer.RegisterCloser(initializer.MOD_LOG, log.Close)
+}
+
+func initLog() {
+	logCBs := []log.LogCB{
+		log.NewLoggerPrint(),
+		log.NewLoggerFileComplex("logs/log", log.FILE_DESCENDING, 5),
+	}
+
+	if debugV.WebHook != "" {
+		if debugV.Mention != "" {
+			debugV.Mention += ", "
+		}
+
+		logCBs = append(logCBs, log.NewLoggerDiscordWebhook(debugV.Mention, debugV.WebHook))
+	}
+
+	log.Init(logCBs...)
 }
