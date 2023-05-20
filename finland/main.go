@@ -42,7 +42,10 @@ func init() {
 		})
 	}, &initializer.ModuleInfo{
 		ConfigOpts: []*string{&config.Channels.Finland},
-		PreHooks:   []initutils.Module{initializer.MOD_HELP_LOADER},
+		PreHooks:   []initutils.Module{
+			initializer.MOD_HELP_LOADER,
+			initializer.MOD_DISCORD,
+		},
 	})
 }
 

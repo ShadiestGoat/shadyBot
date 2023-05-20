@@ -141,6 +141,9 @@ func init() {
 		ConfigOpts: []*string{
 			&config.Channels.ModLog,
 		},
-		PreHooks: []initutils.Module{initializer.MOD_HELP_LOADER},
+		PreHooks: []initutils.Module{
+			initializer.MOD_HELP_LOADER,
+			initializer.MOD_DISCORD,
+		},
 	})
 }

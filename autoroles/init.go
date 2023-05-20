@@ -30,6 +30,9 @@ func init() {
 		ShouldLoad: func(_ *initializer.InitContext) bool {
 			return len(config.Discord.AutoRoles) != 0
 		},
-		PreHooks: []initutils.Module{initializer.MOD_HELP_LOADER},
+		PreHooks: []initutils.Module{
+			initializer.MOD_HELP_LOADER,
+			initializer.MOD_DISCORD,
+		},
 	})
 }

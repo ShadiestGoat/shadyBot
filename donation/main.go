@@ -158,6 +158,7 @@ func init() {
 	}, &initializer.ModuleInfo{
 		PreHooks: []initutils.Module{
 			// initializer.MOD_HELP_LOADER,
+			initializer.MOD_DISCORD,
 		},
 	}, initializer.MOD_DISCORD)
 }
