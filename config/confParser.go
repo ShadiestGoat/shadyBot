@@ -131,9 +131,9 @@ func load() {
 	moduleWarnedKeys := map[string]map[string][]string{}
 	moduleRequiredKeys := map[string][]string{}
 
-	addToWarnings := func (mod, sec, key, consequence string) {
+	addToWarnings := func(mod, sec, key, consequence string) {
 		mod = normMod(mod)
-		
+
 		if moduleWarnedKeys[mod] == nil {
 			moduleWarnedKeys[mod] = map[string][]string{}
 		}
@@ -145,7 +145,7 @@ func load() {
 		moduleWarnedKeys[mod][consequence] = append(moduleWarnedKeys[mod][consequence], keyFormat(sec, key))
 	}
 
-	addToRequired := func (mod, sec, key string) {
+	addToRequired := func(mod, sec, key string) {
 		mod = normMod(mod)
 		if moduleRequiredKeys[mod] == nil {
 			moduleRequiredKeys[mod] = []string{}
@@ -176,11 +176,11 @@ func load() {
 			}
 
 			spl := strings.SplitN(tagV, ",", 4)
-			
+
 			var (
-				key = spl[0]
-				isRequired = false
-				module = ""
+				key         = spl[0]
+				isRequired  = false
+				module      = ""
 				consequence = ""
 			)
 
@@ -259,7 +259,7 @@ func load() {
 					tmpM := map[string]bool{}
 
 					spl := strings.Split(givenVal, " ")
-					
+
 					for _, s := range spl {
 						tmpM[s] = true
 					}
@@ -269,7 +269,7 @@ func load() {
 					tmpM := map[string]bool{}
 
 					spl := strings.Split(givenVal, " ")
-					
+
 					for _, s := range spl {
 						tmpM[strings.ToLower(s)] = true
 					}
@@ -298,7 +298,7 @@ func load() {
 		v = strings.ToLower(v)
 
 		delete(moduleRequiredKeys, v)
-		delete(moduleWarnedKeys,   v)
+		delete(moduleWarnedKeys, v)
 	}
 
 	if len(moduleRequiredKeys) != 0 {
@@ -316,7 +316,7 @@ func load() {
 				log.Warn("%s: Due to %s not being set, %s", m, keys[0], con)
 			} else {
 				keysStr := "- " + strings.Join(keys, "\n- ")
-				
+
 				log.Warn("%s: Due to the following keys not being set, %s:\n%s", m, con, keysStr)
 			}
 		}

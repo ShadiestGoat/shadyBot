@@ -40,7 +40,7 @@ func init() {
 		}
 
 		Twitch.ChannelName = strings.ToLower(Twitch.ChannelName)
-		
+
 		c.DisabledModules = General.Disabled
 	}, nil)
 

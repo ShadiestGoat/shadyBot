@@ -17,7 +17,7 @@ var (
 	Channels = channels{}
 	Discord  = discord{}
 	General  = general{
-		Port: "3000",
+		Port:     "3000",
 		Disabled: map[string]bool{},
 	}
 	XP = xp{
@@ -49,9 +49,9 @@ As is standard, each value is comma separated. Not all keys are required. With t
 */
 
 type general struct {
-	DB     string `conf:"db_uri,,required"`
-	Port   string `conf:"port"`
-	Domain string `conf:"domain,twitch,twitch module will not be loaded"`
+	DB       string                   `conf:"db_uri,,required"`
+	Port     string                   `conf:"port"`
+	Domain   string                   `conf:"domain,twitch,twitch module will not be loaded"`
 	Disabled caseInsensitiveInclusion `conf:"disabled"`
 }
 

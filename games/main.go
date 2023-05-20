@@ -34,7 +34,7 @@ func init() {
 		if !disabled["slots"] {
 			cmdSlots()
 		}
-		
+
 		if !disabled["coinflip"] {
 			cmdCoin()
 		}
@@ -49,7 +49,7 @@ func init() {
 			initializer.MOD_DISCORD,
 		},
 	})
-	
+
 	initializer.Register(initializer.MOD_GAMBLER, func(c *initializer.InitContext) {
 		if !disabledAllGambling {
 			go ActivityStore.Loop(c.Discord, closer)

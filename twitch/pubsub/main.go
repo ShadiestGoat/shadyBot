@@ -111,7 +111,7 @@ func startReading() {
 			if !errors.As(err, &websocket.CloseError{}) {
 				log.Error("While reading twitch pubsub: %v", err)
 			}
-			
+
 			go Connect()
 			return
 		}

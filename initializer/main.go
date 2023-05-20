@@ -38,18 +38,18 @@ const (
 
 // These are the modules that are used by the 'DISABLE' key
 const (
-	DMOD_XP = "xp"
-	DMOD_AUTO_ROLES = "auto_roles"
-	DMOD_TOGGLE_ROLES = "toggle_roles"
-	DMOD_DONATION = "donations"
-	DMOD_FINLAND = "finland"
-	DMOD_GAMES = "games"
-	DMOD_POLLS = "polls"
-	DMOD_MOD_LOG = "mod_log"
-	DMOD_HELP = "help"
-	DMOD_TWITCH = "twitch"
-	DMOD_TWITCH_LIVE = "twitch_live"
-	DMOD_TWITCH_CUSTOM_MOD = "twitch_custom_cmd"
+	DMOD_XP                    = "xp"
+	DMOD_AUTO_ROLES            = "auto_roles"
+	DMOD_TOGGLE_ROLES          = "toggle_roles"
+	DMOD_DONATION              = "donations"
+	DMOD_FINLAND               = "finland"
+	DMOD_GAMES                 = "games"
+	DMOD_POLLS                 = "polls"
+	DMOD_MOD_LOG               = "mod_log"
+	DMOD_HELP                  = "help"
+	DMOD_TWITCH                = "twitch"
+	DMOD_TWITCH_LIVE           = "twitch_live"
+	DMOD_TWITCH_CUSTOM_MOD     = "twitch_custom_cmd"
 	DMOD_TWITCH_PERIODIC_TEXTS = "twitch_periodic_texts"
 )
 
