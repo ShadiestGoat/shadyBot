@@ -151,14 +151,10 @@ github.com/rs/zerolog v1.15.0/go.mod h1:xYTKnLHcpfU2225ny5qZjxnj9NvkumZYjJHlAThC
 github.com/satori/go.uuid v1.2.0/go.mod h1:dA0hQrYB0VpLJoorglMZABFdXlWrHn1NEOzdhQKdks0=
 github.com/shadiestgoat/donation-api-wrapper v1.1.0 h1:UPzjiah//QRKgkotKZZMftzGOtUVSnpP3lsnng3lQGs=
 github.com/shadiestgoat/donation-api-wrapper v1.1.0/go.mod h1:LH8rHYqAJibTgAOE+Mie9z3iUO4pid00WhKX8hU9pSw=
-github.com/shadiestgoat/initutils v1.1.1 h1:clsyRBJgJq4uYKuq6KP1Wt6eu92Q12Pcd8q+/svNXj4=
-github.com/shadiestgoat/initutils v1.1.1/go.mod h1:y1gY9UmY3zj4TUksg2GHqXvQT6KjOCI4tNSjR0GPgrs=
 github.com/shadiestgoat/initutils v1.2.0 h1:qvs+5B0ENIx1qbOSlbBSI2OklaYjoHeWeTjzDNi/21c=
 github.com/shadiestgoat/initutils v1.2.0/go.mod h1:y1gY9UmY3zj4TUksg2GHqXvQT6KjOCI4tNSjR0GPgrs=
-github.com/shadiestgoat/log v1.0.3 h1:ozpBJEk/2znB4A8KNqZ2ztuRiCFaTAXX9Z0tn7D3Tjw=
-github.com/shadiestgoat/log v1.0.3/go.mod h1:U9gLUA8fgyXMcwFD8UK2X3d1UcNyx4FTNbM+0lj0HNw=
-github.com/shadiestgoat/log v1.1.0 h1:85mt4Jg8Qsn9L3i5Oa9v8YaagFWGfgl6wBvgv6iHKjY=
-github.com/shadiestgoat/log v1.1.0/go.mod h1:U9gLUA8fgyXMcwFD8UK2X3d1UcNyx4FTNbM+0lj0HNw=
+github.com/shadiestgoat/initutils v1.2.1 h1:n4OOeS5qaTEsq77JuehWMQX5SUHOCas///JMyyd6k9c=
+github.com/shadiestgoat/initutils v1.2.1/go.mod h1:y1gY9UmY3zj4TUksg2GHqXvQT6KjOCI4tNSjR0GPgrs=
 github.com/shadiestgoat/log v1.1.1 h1:YCGymVN2E6r5TLFeUSrHr15EnBGRre2BOMSnwj4JyV0=
 github.com/shadiestgoat/log v1.1.1/go.mod h1:U9gLUA8fgyXMcwFD8UK2X3d1UcNyx4FTNbM+0lj0HNw=
 github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24/go.mod h1:M+9NzErvs504Cn4c5DxATwIqPbtswREoFCre64PpcG4=
@@ -241,8 +237,6 @@ golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f/go.mod h1:oPkhp1MJrh7nUepCBc
 golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.5.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
-golang.org/x/sys v0.7.0 h1:3jlCCIQZPdOYu1h8BkNvLz8Kgwtae2cagcG/VamtZRU=
-golang.org/x/sys v0.7.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.8.0 h1:EBmGv8NaZBZTWvrbjNoL6HVt+IVy3QDQpJs7VRIw3tU=
 golang.org/x/sys v0.8.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/term v0.0.0-20201117132131-f5c789dd3221/go.mod h1:Nr5EML6q2oocZ2LXRh80K7BxOlk5/8JxuGnuhpl+muw=
