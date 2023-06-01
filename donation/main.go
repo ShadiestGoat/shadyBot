@@ -75,58 +75,59 @@ func init() {
 				}
 			}
 
-			donoChan := discutils.GetChannel(ctx.Discord, config.Donations.ChanDonations)
-
-			if donoChan == nil {
-				log.Debug("%#v", config.Donations)
-				log.Fatal("Couldn't fetch dono channel '%s'!!", config.Donations.ChanDonations)
-			}
-
-			lastID := ""
-
-			// New donations end up here <3 (last donation: {{id}})
-			if len(donoChan.Topic) < (len(config.Donations.ChannelTopic) + (18-len("{{id}}"))) {
-				log.Warn("Current donation channel topic not inline with the needed topic. Assuming no backlog...")
-			} else {
-				// {{id}} must be present since this thing hasn't crashed yet
-				loc := regexp.MustCompile(`{{id}}`).FindStringIndex(config.Donations.ChannelTopic)
-
-				topicLocation = [2]int{loc[0], len(config.Donations.ChannelTopic)-loc[1]}
-				
-				lastID = donoChan.Topic[topicLocation[0]:len(donoChan.Topic)-topicLocation[1]]
-			}
-
-			errCount := 0
-
-			for {
-				log.Debug("Trying for backlog...")
-
-				donations, err := c.Donations("", lastID)
-				
-				if err != nil {
-					if errCount > 4 {
-						log.Fatal("Can't fetch donation backlog: %v", err)
+			if config.Donations.ChanDonations != "" {
+				donoChan := discutils.GetChannel(ctx.Discord, config.Donations.ChanDonations)
+	
+				if donoChan == nil {
+					log.Debug("%#v", config.Donations)
+					log.Fatal("Couldn't fetch dono channel '%s'!!", config.Donations.ChanDonations)
+				}
+	
+				lastID := ""
+	
+				// New donations end up here <3 (last donation: {{id}})
+				if len(donoChan.Topic) < (len(config.Donations.ChannelTopic) + (18-len("{{id}}"))) {
+					log.Warn("Current donation channel topic not inline with the needed topic. Assuming no backlog...")
+				} else {
+					// {{id}} must be present since this thing hasn't crashed yet
+					loc := regexp.MustCompile(`{{id}}`).FindStringIndex(config.Donations.ChannelTopic)
+	
+					topicLocation = [2]int{loc[0], len(config.Donations.ChannelTopic)-loc[1]}
+					
+					lastID = donoChan.Topic[topicLocation[0]:len(donoChan.Topic)-topicLocation[1]]
+				}
+	
+				errCount := 0
+	
+				for {
+					log.Debug("Trying for backlog...")
+	
+					donations, err := c.Donations("", lastID)
+					
+					if err != nil {
+						if errCount > 4 {
+							log.Fatal("Can't fetch donation backlog: %v", err)
+						}
+	
+						time.Sleep(10 * time.Second)
+						continue
 					}
-
-					time.Sleep(10 * time.Second)
-					continue
-				}
-
-				if len(donations) == 0 {
-					break
-				}
-				
-				for _, d := range donations {
-					sendDonationMessage(d, ctx.Discord)
-				}
-
-				lastID = donations[len(donations)-1].ID
-
-				if len(donations) != 50 {
-					break
+	
+					if len(donations) == 0 {
+						break
+					}
+					
+					for _, d := range donations {
+						sendDonationMessage(d, ctx.Discord)
+					}
+	
+					lastID = donations[len(donations)-1].ID
+	
+					if len(donations) != 50 {
+						break
+					}
 				}
 			}
-
 
 			log.Debug("Finished the guild member donation setup")
 		})

@@ -79,7 +79,7 @@ type warnings struct {
 }
 
 type donations struct {
-	ChanDonations string         `conf:"channel_donations,donation,new donations will not be announced"`
+	ChanDonations string         `conf:"channel_announcements,donation,new donations will not be announced"`
 	ChanFunds     string         `conf:"channel_funds,donations,new funds will not be announced"`
 	ChanInfo      string         `conf:"channel_info,donations,donation tier info will not posted"`
 	Persistent    *DonationRoles `conf:"roles_persistent,donations,there are no permanent roles for donors"`
