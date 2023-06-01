@@ -77,6 +77,11 @@ func init() {
 
 			donoChan := discutils.GetChannel(ctx.Discord, config.Donations.ChanDonations)
 
+			if donoChan == nil {
+				log.Debug("%#v", config.Donations)
+				log.Fatal("Couldn't fetch dono channel '%s'!!", config.Donations.ChanDonations)
+			}
+
 			lastID := ""
 
 			// New donations end up here <3 (last donation: {{id}})
