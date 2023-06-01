@@ -96,3 +96,15 @@ func sendDonationMessage(v *donations.Donation, s *discordgo.Session) (mem *disc
 
 	return
 }
+
+func updateTopic(s *discordgo.Session, loc [2]int, newID string) {
+	temp := config.Donations.ChannelTopic
+
+	newTopic := temp[:loc[0]] + newID + temp[len(temp)-loc[1]:]
+
+	_, err := s.ChannelEdit(config.Donations.ChanDonations, &discordgo.ChannelEdit{
+		Topic: newTopic,
+	})
+
+	log.ErrorIfErr(err, "updating channel topic after a dono :/")
+}

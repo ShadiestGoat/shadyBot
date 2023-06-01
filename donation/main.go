@@ -130,6 +130,12 @@ func init() {
 						break
 					}
 				}
+
+				if lastID == "" {
+					lastID = "0"
+				}
+
+				updateTopic(ctx.Discord, topicLocation, lastID)
 			} else {
 				log.Debug("Announcement channel not set; not checking for backlog (member roles are set regardless)")
 			}
@@ -148,6 +154,10 @@ func init() {
 
 			if mem != nil {
 				setDonationRoles(ctx.Discord, c, mem.User.ID, mem.Roles)
+			}
+
+			if config.Donations.ChanDonations != "" {
+				updateTopic(ctx.Discord, topicLocation, v.ID)
 			}
 		})
 
