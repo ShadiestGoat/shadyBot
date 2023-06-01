@@ -78,13 +78,13 @@ type warnings struct {
 }
 
 type donations struct {
-	Donations  string         `conf:"channel_donations,donation,new donations will not be announced"`
-	Funds      string         `conf:"channel_funds,donations,new funds will not be announced"`
-	Info       string         `conf:"channel_info,donations,donation tier info will not posted"`
-	Persistent *DonationRoles `conf:"roles_persistent,donations,there are no permanent roles for donors"`
-	Monthly    *DonationRoles `conf:"roles_monthly,donations,there are no special roles for this month's donors"`
-	Token      string         `conf:"token,donations,required"`
-	Location   string         `conf:"location,donations"`
+	ChanDonations string         `conf:"channel_donations,donation,new donations will not be announced"`
+	ChanFunds     string         `conf:"channel_funds,donations,new funds will not be announced"`
+	ChanInfo      string         `conf:"channel_info,donations,donation tier info will not posted"`
+	Persistent    *DonationRoles `conf:"roles_persistent,donations,there are no permanent roles for donors"`
+	Monthly       *DonationRoles `conf:"roles_monthly,donations,there are no special roles for this month's donors"`
+	Token         string         `conf:"token,donations,required"`
+	Location      string         `conf:"location,donations"`
 }
 
 type twitch struct {

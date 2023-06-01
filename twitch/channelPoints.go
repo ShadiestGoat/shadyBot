@@ -18,12 +18,14 @@ import (
 const custom_cmd_title = "Custom Twitch Command"
 
 func updateChannelPoints(rewardID string, redemptionID string, s string) {
-	helixClient.UpdateChannelCustomRewardsRedemptionStatus(&helix.UpdateChannelCustomRewardsRedemptionStatusParams{
+	resp, err := helixClient.UpdateChannelCustomRewardsRedemptionStatus(&helix.UpdateChannelCustomRewardsRedemptionStatusParams{
 		ID:            redemptionID,
 		BroadcasterID: config.Twitch.OwnID,
 		RewardID:      rewardID,
 		Status:        s,
 	})
+	
+	logError(err, &resp.ResponseCommon, "updating channel point status")
 }
 
 // reject channel points
@@ -45,7 +47,11 @@ var closeOnConnect = make(chan bool, 5)
 var closeOnRedeem = make(chan bool, 5)
 
 func handleReward(data *pubsub.Redemption) {
+	log.Debug("Got a channel point reward!")
+
 	if data.RewardID != twitchCustomCmdID {
+		log.Debug("Not an interesting reward tho :(")
+
 		return
 	}
 
@@ -57,12 +63,14 @@ func handleReward(data *pubsub.Redemption) {
 
 	if len(v) != 2 || len(v[0]) < 3 || len(v[1]) < 3 || strings.Contains(v[0], " ") {
 		ircClient.Say(config.Twitch.ChannelName, "@"+data.UserDisplayName+", you have to use the correct format for the command! Remember, a command can't have spaces, and must be at least 3 characters in length!")
+		log.Debug("Ah bad format :(")
 		rejectPoints(data.RewardID, data.RedemptionID)
 		return
 	}
 
 	if db.Exists(`twitch_cmd`, `cmd = $1 AND usr = $2`, v[0], data.UserID) {
 		ircClient.Say(config.Twitch.ChannelName, "@"+data.UserDisplayName+", you already have a command with that name!")
+		log.Debug("Ah, command exists")
 		rejectPoints(data.RewardID, data.RedemptionID)
 		return
 	}
@@ -71,6 +79,7 @@ func handleReward(data *pubsub.Redemption) {
 
 	acceptPoints(data.RewardID, data.RedemptionID)
 
+	log.Success("Epic cmd added")
 	ircClient.Say(config.Twitch.ChannelName, "@"+data.UserDisplayName+", your command is ready!")
 }
 

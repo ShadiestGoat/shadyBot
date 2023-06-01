@@ -68,6 +68,33 @@ func init() {
 				}
 			}
 
+			msgs, err := ctx.Discord.ChannelMessages(config.Donations.ChanDonations, 50, "", ``, ``)
+
+			if err == nil && len(msgs) > 0 {
+				lastID := ""
+
+				for _, msg := range msgs {
+					if len(msg.Embeds) != 1 || len(msg.Embeds[0].Fields) != 2 {
+						continue						
+					}
+					f := msg.Embeds[0].Fields[0].Value
+
+					if len(f) < 2 || f[0] != '`' || f[len(f)-1] != '`' {
+						continue
+					}
+					
+					lastID = f[1:len(f)-1]
+				}
+
+				if lastID != "" {
+					donos, _ := c.Donations("", lastID)
+					
+					for _, d := range donos {
+						sendDonationMessage(d, ctx.Discord)
+					}
+				}
+			}
+
 			log.Debug("Finished the guild member donation setup")
 		})
 
@@ -78,63 +105,10 @@ func init() {
 		})
 
 		c.AddHandler(func(c *donations.Client, v *donations.EventNewDonation) {
-			donor, err := c.DonorByID(v.Donor, false)
-			if log.ErrorIfErr(err, "fetching donor '%s'", v.Donor) {
-				return
-			}
+			mem := sendDonationMessage(v.Donation, ctx.Discord)
 
-			fund, err := c.FundByID(v.FundID)
-			if log.ErrorIfErr(err, "fetching fund '%s'", v.FundID) {
-				return
-			}
-
-			donorDiscord := ""
-
-			for _, d := range donor.Donors {
-				if d.DiscordID != "" {
-					donorDiscord = d.DiscordID
-					break
-				}
-			}
-
-			emb := discutils.BaseEmbed
-			emb.Title = "New Donation!"
-
-			if donorDiscord != "" {
-				discordID := donorDiscord
-				donorDiscord = "<@" + donorDiscord + ">"
-				mem := discutils.GetMember(ctx.Discord, config.Discord.GuildID, donorDiscord)
-				if mem != nil {
-					setDonationRoles(ctx.Discord, c, discordID, mem.Roles)
-
-					emb.Author = &discordgo.MessageEmbedAuthor{
-						Name:    discutils.MemberName(mem),
-						IconURL: mem.AvatarURL("128"),
-					}
-				}
-			} else {
-				donorDiscord = "Someone"
-			}
-
-			emb.Description = fmt.Sprintf("%s donated %.2f Euro for the [%s](%s) fund!", donorDiscord, v.Amount, fund.ShortTitle, c.FundURL(fund))
-			emb.Fields = append(emb.Fields, &discordgo.MessageEmbedField{
-				Name:   "ID",
-				Value:  "`" + v.ID + "`",
-				Inline: false,
-			})
-
-			emb.Fields = append(emb.Fields, &discordgo.MessageEmbedField{
-				Name:   "Message",
-				Value:  v.Message,
-				Inline: false,
-			})
-
-			if config.Donations.Donations != "" {
-				discutils.SendMessage(ctx.Discord, config.Donations.Donations, &discordgo.MessageSend{
-					Embeds: []*discordgo.MessageEmbed{
-						&emb,
-					},
-				})
+			if mem != nil {
+				setDonationRoles(ctx.Discord, c, mem.User.ID, mem.Roles)
 			}
 		})
 
@@ -147,7 +121,7 @@ func init() {
 			emb := discutils.BaseEmbed
 			emb.Title = "Fund '" + v.ShortTitle + "' has been created" + goalStr + "!"
 			emb.Description = v.Title + "\n[You can look at it here](" + c.FundURL(v.Fund) + ")"
-			discutils.SendMessage(ctx.Discord, config.Donations.Funds, &discordgo.MessageSend{
+			discutils.SendMessage(ctx.Discord, config.Donations.ChanFunds, &discordgo.MessageSend{
 				Embeds: []*discordgo.MessageEmbed{
 					&emb,
 				},
@@ -156,7 +130,6 @@ func init() {
 
 		go donationQueue.Loop(ctx.Discord, c)
 	}, &initializer.ModuleInfo{
-		PreHooks: []initutils.Module{
-		},
+		PreHooks: []initutils.Module{},
 	}, initializer.MOD_DISCORD)
 }

@@ -72,11 +72,11 @@ func discEvents() {
 			})
 		}
 
-		if config.Donations.Info == "" {
+		if config.Donations.ChanInfo == "" {
 			return false
 		}
 
-		msgs, err := s.ChannelMessages(config.Donations.Info, 1, "", "", "")
+		msgs, err := s.ChannelMessages(config.Donations.ChanInfo, 1, "", "", "")
 		shouldPurge := false
 
 		if log.ErrorIfErr(err, "fetching donation info message") || len(msgs) != 1 || len(msgs[0].Embeds) != 1 || len(msgs[0].Embeds[0].Fields) != len(emb.Fields) {
@@ -97,8 +97,8 @@ func discEvents() {
 		}
 
 		if shouldPurge {
-			discutils.PurgeChannel(s, config.Donations.Info)
-			discutils.SendMessage(s, config.Donations.Info, &discordgo.MessageSend{
+			discutils.PurgeChannel(s, config.Donations.ChanInfo)
+			discutils.SendMessage(s, config.Donations.ChanInfo, &discordgo.MessageSend{
 				Embeds: []*discordgo.MessageEmbed{
 					&emb,
 				},
