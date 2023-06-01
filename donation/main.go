@@ -76,11 +76,14 @@ func init() {
 			}
 
 			if config.Donations.ChanDonations != "" {
+				log.Debug("Getting backlog...")
 				donoChan := discutils.GetChannel(ctx.Discord, config.Donations.ChanDonations)
 	
 				if donoChan == nil {
 					log.Debug("%#v", config.Donations)
 					log.Fatal("Couldn't fetch dono channel '%s'!!", config.Donations.ChanDonations)
+					// avoid lsp warnings, log.Fatal() will cause a crash regardless
+					return
 				}
 	
 				lastID := ""
@@ -127,6 +130,8 @@ func init() {
 						break
 					}
 				}
+			} else {
+				log.Debug("Announcement channel not set; not checking for backlog (member roles are set regardless)")
 			}
 
 			log.Debug("Finished the guild member donation setup")
