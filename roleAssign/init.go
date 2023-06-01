@@ -11,7 +11,7 @@ func init() {
 		register()
 	}, &initializer.ModuleInfo{
 		ConfigOpts: []*string{&config.Channels.Polls},
-		PreHooks:   []initutils.Module{
+		PreHooks: []initutils.Module{
 			initializer.MOD_HELP_LOADER,
 			initializer.MOD_DISCORD,
 		},

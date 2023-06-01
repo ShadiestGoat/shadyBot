@@ -6,9 +6,9 @@ var (
 		CustomSO: map[string]string{},
 	}
 	Donations = donations{
-		Persistent: new(DonationRoles),
-		Monthly:    new(DonationRoles),
-		Location:   "donate.shadygoat.eu",
+		Persistent:   new(DonationRoles),
+		Monthly:      new(DonationRoles),
+		Location:     "donate.shadygoat.eu",
 		ChannelTopic: "New donations end up here <3 (last donation: {{id}})",
 	}
 	Warnings = warnings{

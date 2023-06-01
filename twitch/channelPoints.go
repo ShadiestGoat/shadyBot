@@ -24,7 +24,7 @@ func updateChannelPoints(rewardID string, redemptionID string, s string) {
 		RewardID:      rewardID,
 		Status:        s,
 	})
-	
+
 	logError(err, &resp.ResponseCommon, "updating channel point status")
 }
 
