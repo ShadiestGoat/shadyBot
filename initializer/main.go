@@ -19,6 +19,7 @@ const (
 	MOD_DB                initutils.Module = "DB"
 	MOD_DISCORD           initutils.Module = "DISCORD"
 	MOD_DONATION          initutils.Module = "DONATION"
+	MOD_DONATION_LOAD     initutils.Module = "DONATION_LOAD"
 	MOD_FINLAND           initutils.Module = "FINLAND"
 	MOD_GAMES             initutils.Module = "GAMES"
 	MOD_GAMBLER           initutils.Module = "GAMBLER"
@@ -57,7 +58,7 @@ var aliases = map[string][]initutils.Module{
 	DMOD_XP:                    {MOD_XP, MOD_XP_CMD},
 	DMOD_AUTO_ROLES:            {MOD_AUTO_ROLES},
 	DMOD_TOGGLE_ROLES:          {MOD_ROLE_ASSIGN},
-	DMOD_DONATION:              {MOD_DONATION},
+	DMOD_DONATION:              {MOD_DONATION_LOAD, MOD_DONATION},
 	DMOD_FINLAND:               {MOD_FINLAND},
 	DMOD_GAMES:                 {MOD_GAMES, MOD_GAMBLER},
 	DMOD_POLLS:                 {MOD_POLLS},

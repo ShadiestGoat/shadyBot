@@ -2,6 +2,7 @@ package donation
 
 import (
 	"fmt"
+	"regexp"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -21,22 +22,28 @@ const fundNotFound = "Couldn't find the fund!\nYou [can view all the funds here]
 var minAliasL = 3
 
 func init() {
-	cmdEditFund()
-	cmdAddFund()
-	cmdFund()
-	cmdDonor()
+	initializer.Register(initializer.MOD_DONATION_LOAD, func(c *initializer.InitContext) {
+		cmdEditFund()
+		cmdAddFund()
+		cmdFund()
+		cmdDonor()
+	
+		discEvents()
+	
+		discord.RegisterAutocomplete("fund", autocompleteFunds)
+		discord.RegisterAutocomplete("editfund", autocompleteFunds)
+		discord.RegisterAutocomplete("donate", autocompleteFunds)
+	}, &initializer.ModuleInfo{
+		PreHooks: []initutils.Module{initializer.MOD_DISCORD},
+	})
 
-	discEvents()
-
-	discord.RegisterAutocomplete("fund", autocompleteFunds)
-	discord.RegisterAutocomplete("editfund", autocompleteFunds)
-	discord.RegisterAutocomplete("donate", autocompleteFunds)
+	topicLocation := [2]int{}
 
 	initializer.Register(initializer.MOD_DONATION, func(ctx *initializer.InitContext) {
 		c = donations.NewClient(config.Donations.Token, donations.WithCustomLocation(config.Donations.Location))
 
 		c.AddHandler(func(c *donations.Client, v *donations.EventOpen) {
-			log.Debug("Reloading the donation WS conn")
+			log.Debug("Opened DonationAPI WS")
 
 			after := ""
 			errors := 0
@@ -68,32 +75,53 @@ func init() {
 				}
 			}
 
-			msgs, err := ctx.Discord.ChannelMessages(config.Donations.ChanDonations, 50, "", ``, ``)
+			donoChan := discutils.GetChannel(ctx.Discord, config.Donations.ChanDonations)
 
-			if err == nil && len(msgs) > 0 {
-				lastID := ""
+			lastID := ""
 
-				for _, msg := range msgs {
-					if len(msg.Embeds) != 1 || len(msg.Embeds[0].Fields) != 2 {
-						continue						
+			// New donations end up here <3 (last donation: {{id}})
+			if len(donoChan.Topic) < (len(config.Donations.ChannelTopic) + (18-len("{{id}}"))) {
+				log.Warn("Current donation channel topic not inline with the needed topic. Assuming no backlog...")
+			} else {
+				// {{id}} must be present since this thing hasn't crashed yet
+				loc := regexp.MustCompile(`{{id}}`).FindStringIndex(config.Donations.ChannelTopic)
+
+				topicLocation = [2]int{loc[0], len(config.Donations.ChannelTopic)-loc[1]}
+				
+				lastID = donoChan.Topic[topicLocation[0]:len(donoChan.Topic)-topicLocation[1]]
+			}
+
+			errCount := 0
+
+			for {
+				log.Debug("Trying for backlog...")
+
+				donations, err := c.Donations("", lastID)
+				
+				if err != nil {
+					if errCount > 4 {
+						log.Fatal("Can't fetch donation backlog: %v", err)
 					}
-					f := msg.Embeds[0].Fields[0].Value
 
-					if len(f) < 2 || f[0] != '`' || f[len(f)-1] != '`' {
-						continue
-					}
-					
-					lastID = f[1:len(f)-1]
+					time.Sleep(10 * time.Second)
+					continue
 				}
 
-				if lastID != "" {
-					donos, _ := c.Donations("", lastID)
-					
-					for _, d := range donos {
-						sendDonationMessage(d, ctx.Discord)
-					}
+				if len(donations) == 0 {
+					break
+				}
+				
+				for _, d := range donations {
+					sendDonationMessage(d, ctx.Discord)
+				}
+
+				lastID = donations[len(donations)-1].ID
+
+				if len(donations) != 50 {
+					break
 				}
 			}
+
 
 			log.Debug("Finished the guild member donation setup")
 		})

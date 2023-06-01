@@ -42,6 +42,12 @@ func init() {
 		Twitch.ChannelName = strings.ToLower(Twitch.ChannelName)
 
 		c.DisabledModules = General.Disabled
+
+		if !c.DisabledModules[initializer.DMOD_DONATION] {
+			if !strings.Contains(Donations.ChannelTopic, "{{id}}") {
+				log.Fatal("{{id}} is a required part of the channel topic!")
+			}
+		}
 	}, nil)
 
 	initializer.RegisterPriority(initializer.MOD_LOG, func(c *initializer.InitContext) {

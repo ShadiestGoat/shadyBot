@@ -9,6 +9,7 @@ var (
 		Persistent: new(DonationRoles),
 		Monthly:    new(DonationRoles),
 		Location:   "donate.shadygoat.eu",
+		ChannelTopic: "New donations end up here <3 (last donation: {{id}})",
 	}
 	Warnings = warnings{
 		AutoBanSeverity: 5,
@@ -85,6 +86,7 @@ type donations struct {
 	Monthly       *DonationRoles `conf:"roles_monthly,donations,there are no special roles for this month's donors"`
 	Token         string         `conf:"token,donations,required"`
 	Location      string         `conf:"location,donations"`
+	ChannelTopic  string         `conf:"donation_channel_topic,donations"`
 }
 
 type twitch struct {
