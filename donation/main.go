@@ -156,6 +156,8 @@ func init() {
 			})
 		})
 
+		c.OpenWS()
+
 		go donationQueue.Loop(ctx.Discord, c)
 	}, &initializer.ModuleInfo{
 		PreHooks: []initutils.Module{},
