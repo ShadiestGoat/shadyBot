@@ -65,9 +65,11 @@ func sendDonationMessage(v *donations.Donation, s *discordgo.Session) (mem *disc
 
 		mem = discutils.GetMember(s, config.Discord.GuildID, discordID)
 
-		emb.Author = &discordgo.MessageEmbedAuthor{
-			Name:    discutils.MemberName(mem),
-			IconURL: mem.AvatarURL("128"),
+		if mem != nil {
+			emb.Author = &discordgo.MessageEmbedAuthor{
+				Name:    discutils.MemberName(mem),
+				IconURL: mem.AvatarURL("128"),
+			}
 		}
 	} else {
 		donorDiscord = "Someone"
@@ -87,11 +89,12 @@ func sendDonationMessage(v *donations.Donation, s *discordgo.Session) (mem *disc
 	})
 
 	if config.Donations.ChanDonations != "" {
-		discutils.SendMessage(s, config.Donations.ChanDonations, &discordgo.MessageSend{
+		_, err := discutils.SendMessage(s, config.Donations.ChanDonations, &discordgo.MessageSend{
 			Embeds: []*discordgo.MessageEmbed{
 				&emb,
 			},
 		})
+		log.ErrorIfErr(err, "sending a donation msg")
 	}
 
 	return
