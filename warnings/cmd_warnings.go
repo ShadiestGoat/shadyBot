@@ -172,6 +172,7 @@ func cmdWarnings() {
 	discord.RegisterCommand(&discordgo.ApplicationCommand{
 		Type:        discordgo.ChatApplicationCommand,
 		Name:        "admin-warnings",
+		DefaultMemberPermissions: discord.Perms(discord.PERM_ADMINISTRATOR),
 		Description: "View a list a warnings (admin variant)",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
