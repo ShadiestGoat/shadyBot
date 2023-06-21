@@ -204,7 +204,11 @@ func cmdWarnings() {
 	discord.RegisterComponent("warnings", func(s *discordgo.Session, i *discordgo.InteractionCreate, d *discordgo.MessageComponentInteractionData) {
 		log.Debug("warnings custom id: '%s'", d.CustomID)
 		info, newPage := utils.ParsePagination(d.CustomID, super_num)
-		userID := info[0]
+		userID := ""
+
+		if len(info) != 0 {
+			userID = info[0]
+		}
 
 		emb, err := warningsEmbed(userID, newPage)
 
