@@ -178,7 +178,7 @@ const (
 	// continue game
 	bjd_continue
 	// game end: you hand > dealr
-	bjd_lost
+	bjd_stop_pulling
 	// game end: dealer won
 	bjd_won
 )
@@ -205,7 +205,7 @@ func (g BJGame) dealerLoopState() bjDealerState {
 		return bjd_continue
 	}
 
-	return bjd_lost
+	return bjd_stop_pulling
 }
 
 //

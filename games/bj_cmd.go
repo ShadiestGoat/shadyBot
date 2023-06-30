@@ -131,6 +131,7 @@ func cmdBlackjack() {
 		}
 
 		msgToSend := ""
+		// If the user won or not
 		won := false
 		gotDraw := false
 
@@ -163,8 +164,16 @@ func cmdBlackjack() {
 				msgToSend = "The Dealer busted"
 			case bjd_draw:
 				gotDraw = true
-			case bjd_lost:
+			case bjd_stop_pulling:
+				dealerTots := game.DealerHand.Totals(true)
 				won = true
+
+				if len(dealerTots) != 0 {
+					won = dealerTots[0] < game.UserHand.Totals(true)[0]
+					// just in case
+					gotDraw = dealerTots[0] == game.UserHand.Totals(true)[0]
+				}
+
 				msgToSend = "Your hand is greater than The Dealer's"
 			case bjd_won:
 				won = false
