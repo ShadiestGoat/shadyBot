@@ -12,5 +12,9 @@ func GreatestCommonDivisor(a, b int) int {
 		a, b = b, a%b
 	}
 
+	if a == 0 {
+		return 1
+	}
+
 	return a
 }
