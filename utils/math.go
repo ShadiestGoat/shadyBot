@@ -2,6 +2,10 @@ package utils
 
 // Returns the greatest common divisor between a & b.
 func GreatestCommonDivisor(a, b int) int {
+	if a == 0 || b == 0 {
+		return 1
+	}
+	
 	// condition: b <= a
 
 	if b > a {
