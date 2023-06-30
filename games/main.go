@@ -97,6 +97,8 @@ func cmdGambler() {
 			return
 		}
 
+		// 0 - won
+		// 1 - lost
 		total := [2]int{}
 
 		for rows.Next() {
