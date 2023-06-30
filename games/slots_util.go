@@ -65,7 +65,7 @@ func slotsRewards(inp [3]rune) int {
 		}
 	}
 
-	otherChars := []rune{SLOTS_CHAR_SPECIAL_MEDIUM, SLOTS_CHAR_SPECIAL_EPIC}
+	otherChars := []rune{SLOTS_CHAR_SPECIAL_EPIC, SLOTS_CHAR_SPECIAL_MEDIUM}
 	otherCharRewards := []int{69, 54}
 
 	for i, r := range otherChars {
