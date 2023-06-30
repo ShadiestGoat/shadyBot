@@ -117,7 +117,9 @@ func cmdSlots() {
 			}
 		}
 
-		FinishGame(userID, int(math.Abs(float64(total)-float64(lines)*LINE_COST)), total > 0, GT_SLOTS)
+		trueTotal := float64(total)-float64(lines)*LINE_COST
+
+		FinishGame(userID, int(math.Abs(trueTotal)), trueTotal > 0, GT_SLOTS)
 
 		discutils.IResp(s, i.Interaction, &discutils.IRespOpts{
 			Embed:   emb,
