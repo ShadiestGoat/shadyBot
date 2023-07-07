@@ -77,6 +77,7 @@ func cmdBlackjack() {
 
 		if game == nil {
 			discutils.IError(s, i.Interaction, "Couldn't parse the game :(", discutils.I_UPDATE)
+			return
 		}
 
 		if discutils.DefaultInteractionUpdateBtn(s, i.Interaction) {
