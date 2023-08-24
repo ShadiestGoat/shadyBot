@@ -63,8 +63,9 @@ func cmdAddFund() {
 			discutils.IError(s, i.Interaction, err.Error())
 			return
 		}
+
 		if fund.Amount == nil {
-			*fund.Amount = 0
+			fund.Amount = new(float64)
 		}
 
 		emb := embedFund(fund)

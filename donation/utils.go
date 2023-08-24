@@ -24,6 +24,10 @@ func embedFund(f *donations.Fund) *discordgo.MessageEmbed {
 			}
 
 			*f = *tmpF
+
+			if f.Amount == nil {
+				f.Amount = new(float64)
+			}
 		}
 
 		emb.Fields = append(emb.Fields, &discordgo.MessageEmbedField{
