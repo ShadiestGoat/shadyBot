@@ -86,8 +86,8 @@ func start() error {
 		}
 	}
 
-	isClosing.Store(false)
 
+	isClosing.Store(false)
 	go startPing()
 	go startReading()
 
@@ -145,7 +145,7 @@ func startReading() {
 var isClosing = atomic.Bool{}
 
 func Close() {
-	if isClosing.Load() {
+	if isClosing.Load() || wsConn == nil {
 		return
 	}
 
