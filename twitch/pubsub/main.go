@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"sync/atomic"
 
 	"github.com/shadiestgoat/log"
 	"github.com/shadiestgoat/shadyBot/config"
@@ -85,6 +86,8 @@ func start() error {
 		}
 	}
 
+	isClosing.Store(false)
+
 	go startPing()
 	go startReading()
 
@@ -107,9 +110,15 @@ func startReading() {
 
 	for {
 		_, msg, err := wsConn.Reader(context.Background())
+		if isClosing.Load() {
+			go Connect()
+			return
+		}
+
 		if err != nil {
 			if !errors.As(err, &websocket.CloseError{}) {
 				log.Error("While reading twitch pubsub: %v", err)
+				return
 			}
 
 			go Connect()
@@ -133,14 +142,16 @@ func startReading() {
 	}
 }
 
+var isClosing = atomic.Bool{}
+
 func Close() {
-	if wsConn == nil {
+	if isClosing.Load() {
 		return
 	}
 
 	closePing <- true
 	wsConn.Close(websocket.StatusGoingAway, "Cya <3")
-	wsConn = nil
+	isClosing.Store(true)
 }
 
 type resp struct {
