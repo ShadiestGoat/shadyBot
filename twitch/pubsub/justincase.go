@@ -1,6 +1,8 @@
 package pubsub
 
+import "sync/atomic"
+
 var (
-	doingPing = false
-	doingRead = false
+	doingPing = atomic.Bool{}
+	doingRead = atomic.Bool{}
 )

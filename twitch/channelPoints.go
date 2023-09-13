@@ -40,7 +40,7 @@ func acceptPoints(rewardID string, redemptionID string) {
 
 func refreshPubSub() {
 	pubsub.SetToken(userToken.AccessToken)
-	pubsub.Connect()
+	pubsub.Connect("Refresh")
 }
 
 var closeOnConnect = make(chan bool, 5)
@@ -193,8 +193,8 @@ func setupPubSub() {
 	go func() {
 		for {
 			select {
-			case <-pubsub.OnConnect:
-				log.Success("Connected to pubsub!")
+			case origin := <-pubsub.OnConnect:
+				log.Success("Connected to pubsub! (Origin: %s)", origin)
 				fetchOldRedemptions("")
 			case <-closeOnConnect:
 				return

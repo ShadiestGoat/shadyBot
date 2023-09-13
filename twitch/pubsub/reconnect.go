@@ -11,13 +11,14 @@ import (
 
 var failAmt = 0
 
-var OnConnect = make(chan bool, 5)
+// Fires when a successful connection is done. Returns the connection origin
+var OnConnect = make(chan string)
 
 var connectionLock = atomic.Bool{}
 
 // (re)Connect
-// Should always be called as a go routine!
-func Connect() {
+// Should always be called as a goroutine!
+func Connect(connOrigin string) {
 	if connectionLock.Load() {
 		return
 	}
@@ -38,19 +39,20 @@ func Connect() {
 
 	time.Sleep(d)
 
-	err := start()
+	err := start("connOrigin")
 	if err != nil {
 		failAmt++
 		if failAmt > 10 {
 			log.Fatal("Twitch pubsub conn error <3: %v", err)
 		}
-		go Connect()
+
+		go Connect(connOrigin)
 		return
 	} else {
 		failAmt = 0
 	}
 
-	OnConnect <- true
+	OnConnect <- connOrigin
 
 	connectionLock.Store(false)
 }

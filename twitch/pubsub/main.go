@@ -39,9 +39,9 @@ func (err respErr) Error() string {
 }
 
 // Returns if the connection is successful or not
-func start() error {
+func start(connOrigin string) error {
 	if wsConn != nil {
-		log.Warn("Pubsub open x2!!")
+		log.Warn("Pubsub open x2!! (Origin: %s)", connOrigin)
 		return errDoubleConn
 	}
 
@@ -86,32 +86,31 @@ func start() error {
 		}
 	}
 
-
 	isClosing.Store(false)
-	go startPing()
-	go startReading()
+	go startPing(connOrigin)
+	go startReading(connOrigin)
 
 	return nil
 }
 
 var Redeems = make(chan *Redemption, 10)
 
-func startReading() {
-	if doingRead {
-		log.Warn("Reading x2 !!!")
+func startReading(origin string) {
+	if doingRead.Load() {
+		log.Warn("Reading x2 !!! (Origin: %s)", origin)
 		return
 	}
 
-	doingRead = true
+	doingRead.Store(true)
 
 	defer func() {
-		doingRead = false
+		doingRead.Store(false)
 	}()
 
 	for {
 		_, msg, err := wsConn.Reader(context.Background())
 		if isClosing.Load() {
-			go Connect()
+			go Connect("startReading: isClosing load")
 			return
 		}
 
@@ -121,7 +120,7 @@ func startReading() {
 				return
 			}
 
-			go Connect()
+			go Connect("startReading: error")
 			return
 		}
 
@@ -130,13 +129,13 @@ func startReading() {
 
 		switch v.Type {
 		case "PONG":
-			pongDone = true
+			pongDone.Store(true)
 		case "reward-redeemed":
 			rawR := rawReward{}
 			json.Unmarshal(v.Data, &rawR)
 			Redeems <- rawR.Parse()
 		case "RECONNECT":
-			go Connect()
+			go Connect("startReading: RECONNECT")
 			return
 		}
 	}

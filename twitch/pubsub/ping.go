@@ -3,6 +3,7 @@ package pubsub
 import (
 	"context"
 	"encoding/json"
+	"sync/atomic"
 	"time"
 
 	"github.com/shadiestgoat/log"
@@ -17,20 +18,20 @@ func init() {
 	})
 }
 
-var pongDone = false
+var pongDone = atomic.Bool{}
 var closePing = make(chan bool, 2)
 
-func startPing() {
-	if doingPing {
-		log.Warn("Doing ping x2!!!!")
+func startPing(origin string) {
+	if doingPing.Load() {
+		log.Warn("Doing ping x2 (Origin: %s)", origin)
 		return
 	}
 	t := time.NewTicker(4 * time.Minute)
 
-	doingPing = true
+	doingPing.Store(true)
 
 	defer func() {
-		doingPing = false
+		doingPing.Store(false)
 	}()
 
 	for {
@@ -48,16 +49,19 @@ func doPing() {
 		log.Warn("PubSub WS Conn is nil when pinging!")
 		return
 	}
+
 	err := wsConn.Write(context.Background(), websocket.MessageText, msg_ping)
 	if log.ErrorIfErr(err, "writing to pubsub conn") {
-		go Connect()
+		go Connect("doPing: post error")
 		return
 	}
 	time.Sleep(10 * time.Second)
-	if !pongDone {
+
+	if !pongDone.Load() {
 		log.Error("Pong not received :(")
-		go Connect()
+		go Connect("doPing: post non-pong")
 		return
 	}
-	pongDone = false
+
+	pongDone.Store(false)
 }
