@@ -48,6 +48,8 @@ func refreshToken(caller string) {
 		return
 	}
 
+	defer refreshing.Store(false)
+
 	refreshing.Store(true)
 	log.Debug("Refreshing token... (%s)", caller)
 
@@ -58,11 +60,31 @@ func refreshToken(caller string) {
 		return
 	}
 
-	resp, err := helixClient.RefreshUserAccessToken(userToken.RefreshToken)
-	if log.ErrorIfErr(err, "refreshing twitch token") {
-		return
+	fails := 0
+	var resp *helix.RefreshTokenResponse
+	var err error
+
+	for {
+		if fails >= 10 {
+			break
+		}
+		resp, err = helixClient.RefreshUserAccessToken(userToken.RefreshToken)
+		if err != nil {
+			fails++
+			if !strings.HasSuffix(err.Error(), "TLS handshake timeout") {
+				log.ErrorIfErr(err, "refreshing twitch token (fails: %d)", fails)
+			}
+			
+			time.Sleep(250 * time.Millisecond)
+		} else {
+			break
+		}
 	}
 
+	if log.ErrorIfErr(err, "refreshing twitch token (POST)") {
+		return
+	}
+	
 	*userToken = OAuth2{
 		AccessToken:  resp.Data.AccessToken,
 		RefreshToken: resp.Data.RefreshToken,
@@ -75,7 +97,6 @@ func refreshToken(caller string) {
 	go refreshPubSub()
 
 	time.Sleep(2 * time.Second)
-	refreshing.Store(false)
 
 	go autoRefreshGoroutine()
 }
