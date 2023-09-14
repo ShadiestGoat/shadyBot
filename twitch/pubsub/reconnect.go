@@ -24,7 +24,7 @@ func Connect(connOrigin string) {
 	}
 	connectionLock.Store(true)
 
-	Close()
+	Close("Reconnecting: " + connOrigin)
 
 	// Always sleep, even if its for like 10 seconds
 	d := time.Duration(math.Pow(2, float64(failAmt))) * time.Second

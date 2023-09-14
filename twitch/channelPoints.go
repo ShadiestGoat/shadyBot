@@ -40,6 +40,7 @@ func acceptPoints(rewardID string, redemptionID string) {
 
 func refreshPubSub() {
 	pubsub.SetToken(userToken.AccessToken)
+	pubsub.Close("Refresh")
 	pubsub.Connect("Refresh")
 }
 

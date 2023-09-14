@@ -143,13 +143,14 @@ func startReading(origin string) {
 
 var isClosing = atomic.Bool{}
 
-func Close() {
+func Close(reason string) {
 	if isClosing.Load() || wsConn == nil {
 		return
 	}
 
+	log.Debug("Closing: %s", reason)
 	closePing <- true
-	wsConn.Close(websocket.StatusGoingAway, "Cya <3")
+	wsConn.Close(websocket.StatusGoingAway, reason)
 	isClosing.Store(true)
 }
 

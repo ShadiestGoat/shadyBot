@@ -59,6 +59,7 @@ func doPing() {
 
 	if !pongDone.Load() {
 		log.Error("Pong not received :(")
+		Close("Ping Fail")
 		go Connect("doPing: post non-pong")
 		return
 	}
