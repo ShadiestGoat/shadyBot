@@ -39,7 +39,7 @@ func Connect(connOrigin string) {
 
 	time.Sleep(d)
 
-	err := start("connOrigin")
+	err := start(connOrigin)
 	if err != nil {
 		failAmt++
 		if failAmt > 10 {
