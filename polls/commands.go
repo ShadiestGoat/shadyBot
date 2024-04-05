@@ -156,7 +156,7 @@ func cmd() {
 			Channel: config.Channels.Polls,
 			ID:      d.TargetID,
 
-			Embeds: []*discordgo.MessageEmbed{
+			Embeds: &[]*discordgo.MessageEmbed{
 				newEmb,
 			},
 		})

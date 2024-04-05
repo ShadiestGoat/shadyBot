@@ -102,7 +102,7 @@ func (g Game) buttons() []discordgo.MessageComponent {
 		discordgo.Button{
 			Disabled: g.CurrentCol <= 1,
 			Style:    discordgo.PrimaryButton,
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: characters.SUPER_LEFT,
 			},
 			CustomID: prefix + "_superprev",
@@ -110,7 +110,7 @@ func (g Game) buttons() []discordgo.MessageComponent {
 		discordgo.Button{
 			Disabled: g.CurrentCol == 0,
 			Style:    discordgo.PrimaryButton,
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: characters.ARROW_LL,
 			},
 			CustomID: prefix + "_prev",
@@ -118,7 +118,7 @@ func (g Game) buttons() []discordgo.MessageComponent {
 		discordgo.Button{
 			Disabled: g.Board[0][g.CurrentCol] != P0CHAR,
 			Style:    discordgo.SuccessButton,
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: characters.ARROW_DD,
 			},
 			CustomID: prefix + "_place",
@@ -126,7 +126,7 @@ func (g Game) buttons() []discordgo.MessageComponent {
 		discordgo.Button{
 			Disabled: g.CurrentCol == 6,
 			Style:    discordgo.PrimaryButton,
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: characters.ARROW_RR,
 			},
 			CustomID: prefix + "_next",
@@ -134,7 +134,7 @@ func (g Game) buttons() []discordgo.MessageComponent {
 		discordgo.Button{
 			Disabled: g.CurrentCol >= 5,
 			Style:    discordgo.PrimaryButton,
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: characters.SUPER_RIGHT,
 			},
 			CustomID: prefix + "_supernext",

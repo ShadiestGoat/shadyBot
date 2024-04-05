@@ -44,7 +44,7 @@ func helpResp(s *discordgo.Session, i *discordgo.Interaction, secName string, is
 		Comps: []discordgo.MessageComponent{
 			discordgo.Button{
 				Style: discordgo.PrimaryButton,
-				Emoji: discordgo.ComponentEmoji{
+				Emoji: &discordgo.ComponentEmoji{
 					Name: characters.ARROW_LL,
 				},
 				Disabled: curI == 0,
@@ -52,7 +52,7 @@ func helpResp(s *discordgo.Session, i *discordgo.Interaction, secName string, is
 			},
 			discordgo.Button{
 				Style: discordgo.PrimaryButton,
-				Emoji: discordgo.ComponentEmoji{
+				Emoji: &discordgo.ComponentEmoji{
 					Name: characters.ARROW_RR,
 				},
 				Disabled: curI == len(sections)-1,

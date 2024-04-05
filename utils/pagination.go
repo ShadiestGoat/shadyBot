@@ -83,7 +83,7 @@ func PaginationButtonFactory(curPage int, maxL int, prefix string, fullDisable b
 		&discordgo.Button{
 			Disabled: superPrev,
 			Style:    discordgo.PrimaryButton,
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: "⏮",
 			},
 			CustomID: prefix + "_superprev_" + idSuffix,
@@ -91,7 +91,7 @@ func PaginationButtonFactory(curPage int, maxL int, prefix string, fullDisable b
 		&discordgo.Button{
 			Disabled: prev,
 			Style:    discordgo.PrimaryButton,
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: "⬅️",
 			},
 			CustomID: prefix + "_prev_" + idSuffix,
@@ -99,7 +99,7 @@ func PaginationButtonFactory(curPage int, maxL int, prefix string, fullDisable b
 		&discordgo.Button{
 			Disabled: false,
 			Style:    discordgo.PrimaryButton,
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: "🔄",
 			},
 			CustomID: prefix + "_refresh_" + idSuffix,
@@ -107,7 +107,7 @@ func PaginationButtonFactory(curPage int, maxL int, prefix string, fullDisable b
 		&discordgo.Button{
 			Disabled: next,
 			Style:    discordgo.PrimaryButton,
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: "➡️",
 			},
 			CustomID: prefix + "_next_" + idSuffix,
@@ -115,7 +115,7 @@ func PaginationButtonFactory(curPage int, maxL int, prefix string, fullDisable b
 		&discordgo.Button{
 			Disabled: superNext,
 			Style:    discordgo.PrimaryButton,
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: "⏭️",
 			},
 			CustomID: prefix + "_supernext_" + idSuffix,
